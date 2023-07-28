@@ -1,21 +1,36 @@
 {
+  "homepage":"http://shyver.github.io/convioo-app",
   "name": "convioo-app",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "predeploy": "npm run build",
+    "deploy":"gh-pages -d build",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
+    "@auth0/auth0-react": "^2.2.0",
+    "@cloudinary/react": "^1.11.2",
+    "@cloudinary/url-gen": "^1.10.2",
     "autoprefixer": "10.4.14",
     "eslint": "8.45.0",
     "eslint-config-next": "13.4.11",
-    "next": "13.4.11",
+    "next": "^13.4.12",
     "postcss": "8.4.27",
+    "prop-types": "^15.8.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-dropzone": "^14.2.3",
+    "react-modal": "^3.16.1",
+    "react-video-recorder": "^3.19.4",
+    "styled-components": "^6.0.5",
     "tailwindcss": "3.3.3"
+  },
+  "devDependencies": {
+    "gh-pages": "^5.0.0",
+    "react-video-thumbnail": "^0.1.3"
   }
 }
