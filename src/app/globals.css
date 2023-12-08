@@ -17,6 +17,7 @@
 }
 
 body {
+  font-family: 'MonumentExtended-regular',sans-serif;
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
       to bottom,
@@ -24,4 +25,15 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
+}
+
+.text-stroke {
+  color: white;
+  text-shadow:
+      1px 1px 1px rgba(0,0,0,0.4),
+    -1px -1px 1px rgba(0,0,0,0.4),  
+     1px -1px 1px rgba(0,0,0,0.4),
+     -1px 1px 1px rgba(0,0,0,0.4),
+      1px 1px 1px rgba(0,0,0,0.4); /* Make the text transparent */
+
 }

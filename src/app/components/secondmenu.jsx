@@ -6,10 +6,10 @@ const Secondmenu = (props) => {
   return (
     <div className={menustyle}>
         <Source bg={props.bg}/>
-    <div className="self-stretch h-[230px] flex-col justify-start items-start gap-8 flex">
+    <div className="self-stretch flex-col justify-start items-start gap-8 flex">
         <div className="text-black text-base font-semibold leading-tight">Folders</div>
-        <div className="self-stretch h-[178px] flex-col justify-start items-center gap-1.5 flex">
-            <div className="w-[217px] px-4 py-2.5 bg-white rounded justify-between items-center gap-2 inline-flex">
+        <div className="self-stretch  flex-col justify-start items-center gap-1.5 flex">
+            <div className="w-[217px] px-4 py-2.5 bg-white rounded justify-between items-center gap-2 inline-flex" onClick={props.allClick}>
                 <div className="justify-start items-center gap-2 flex">
                     <div className="w-5 h-5 relative" />
                     <div className="text-zinc-950 text-sm font-medium leading-[18px]">All</div>

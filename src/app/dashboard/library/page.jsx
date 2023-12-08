@@ -1,14 +1,87 @@
 'use client'
-import React, {useCallback, useState } from 'react'
+import React, {useCallback, useState, useRef, useEffect } from 'react'
 import {useDropzone} from 'react-dropzone'
 import { upload, recordIcon, close, smallcross, check } from '@/app/assets'
 import OneIconButton from '@/app/components/buttons/OneIconButton'
 import Modal from 'react-modal'
 import Image from 'next/image'
 import VideoThumbnail from 'react-video-thumbnail';
-import VideoRecorder from 'react-video-recorder'
+import { ReactMediaRecorder } from "react-media-recorder";
+import CameraPreview from '@/app/components/CameraPreview';
+import firebase_app from '@/app/config';
+import { getStorage, ref, uploadBytesResumable, listAll } from "firebase/storage";
+import { useRouter } from 'next/navigation'
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '@/app/firebase';
+
+
+
 
 export default function Page ()  {
+  const router = useRouter();
+  const storage = getStorage();
+const [user] = useAuthState(auth);
+const [listRef, setListRef] = useState([]);
+const [storageRef, setstorageRef] = useState([])
+const [itemCount, setItemCount] = useState(0)
+useEffect(() => {
+  if(user){
+  setListRef(ref(storage, `${user.uid}/videos/`));
+  console.log(itemCount);
+  setstorageRef(ref(storage, `${user.uid}/videos/${itemCount}`));
+
+  }
+
+}, [user,itemCount])
+
+
+if(listRef!='') {
+  listAll(listRef)
+.then((res) => {
+  console.log(res.items.length);
+  setItemCount(res.items.length);
+});
+}
+
+
+
+
+
+
+
+  const VideoPreview = ({ stream }) => {
+    const videoRef = useRef<HTMLVideoElement>(null);
+    useEffect(() => {
+      if (videoRef.current && stream) {
+        videoRef.current.srcObject = stream;
+      }
+    }, [stream,videoRef]);
+    if (!stream) {
+      return null;
+    }
+    return <video ref={videoRef} width={500} height={500} autoPlay controls />;
+  };
+  
+
+
+  const RecordView = () => (
+    <div  className='w-full'>
+      <ReactMediaRecorder 
+        video askPermissionOnMount={true} 
+        render={({ status, startRecording, stopRecording, mediaBlobUrl, previewStream }) => (
+          <div>
+            
+            <button onClick={startRecording}>Start Recording</button>
+            <button onClick={stopRecording}>Stop Recording</button>
+            <CameraPreview close={close}/>
+            {/* <VideoPreview stream={previewStream} />;
+            <video src={mediaBlobUrl} controls autoPlay loop /> */}
+          </div>
+        )}
+      />
+    </div>
+  );
+
     function MyDropzone() {
 
     const onDrop = useCallback(acceptedFiles => {
@@ -16,9 +89,9 @@ export default function Page ()  {
         setFiles(...acceptedFiles.map(file =>Object.assign(file, {preview: URL.createObjectURL(file)}) )
         
         );
-        console.log(`length : ${files.length}`);
-        if(files.length)
         console.log(files);
+        console.log(files.length);
+        if(files)
         {
         setuploadIsOpen(false);
         setConfirmupload(true);
@@ -54,20 +127,26 @@ export default function Page ()  {
   }
 
 
-
   const [uploadIsOpen, setuploadIsOpen] = React.useState(false);
   const [recordIsOpen, setRecordIsOpen] = useState(false);
   const [confirmupload, setConfirmupload] = useState(false);
   const [files,setFiles]= useState([]);
   const [thumbnail, setThumbnail] = useState('');
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploading, setUploading] = useState(false); 
   return (
-    <div className='flex justify-center pt-[10%]'>
-    <div className="w-[374px] h-[234px] flex-col justify-start items-center gap-4 inline-flex">
+    
+    <div className='flex justify-center pt-[10%] '>
+    <div className="w-[374px] flex-col justify-start items-center gap-4 inline-flex ">
     <div className="text-zinc-950 text-lg font-medium leading-relaxed tracking-tight">Connect sources to start creating Convis</div>
     <div className="self-stretch p-6 bg-white rounded-xl justify-between items-center gap-[106px] inline-flex">
         <div className="text-zinc-950 text-base font-medium leading-snug w-[150px]">Select files to upload</div>
         <OneIconButton src={upload} title='Upload' onClick={()=>{
+          if(itemCount<5)
             setuploadIsOpen(true);
+          else {
+            alert("You cannot upload more than 5 videos.")
+          }
         }}/>
         <Modal isOpen={uploadIsOpen}
         onRequestClose={closeModal}
@@ -109,7 +188,7 @@ export default function Page ()  {
         <div className='hidden'>
         { files.length!=0 ? <VideoThumbnail
     videoUrl={files.preview}
-    thumbnailHandler={(thumbnail) => {console.log(thumbnail);
+    thumbnailHandler={(thumbnail) => {
     files.length!=0 ? setThumbnail(thumbnail): null;
     }}
     width={0}
@@ -118,8 +197,8 @@ export default function Page ()  {
             <div className="flex-col justify-start items-start inline-flex">
                 <div className="w-[916.53px] h-[452.50px] pl-[318.76px] pr-[317.76px] pt-[167.25px] pb-[205.25px] justify-center items-center inline-flex">
                     <div className="self-stretch p-3 bg-white rounded-xl justify-center items-center gap-4 inline-flex">
-                        <div className="text-zinc-950 text-base font-bold leading-none">Use this video?</div>
-                        <div className="justify-center items-center gap-2 flex">
+                        <div className={`text-zinc-950 text-base font-bold leading-none ${uploading ? "hidden" :  "" }`}>Use this video?</div>
+                        <div className={`justify-center items-center gap-2 flex ${uploading ? "hidden" :  "" }`}>
                           <button onClick={()=>{
                             setConfirmupload(false);
                             setuploadIsOpen(true);
@@ -128,10 +207,53 @@ export default function Page ()  {
                                 <Image src={smallcross} alt='smallcross'/>
                             </div>
                             </button>
-                            <div className="p-4 bg-teal-100 rounded-xl justify-start items-center gap-4 flex">
+                            <button className="p-4 bg-teal-100 rounded-xl justify-start items-center gap-4 flex" onClick={() => {
+                              setUploading(true);
+                              
+                              const uploadTask =uploadBytesResumable(storageRef, files)
+                              uploadTask.on('state_changed', 
+                                (snapshot) => {
+                                  // Observe state change events such as progress, pause, and resume
+                                  // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+                                  const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                                  setUploadProgress(progress);
+                                  
+                                  switch (snapshot.state) {
+                                    case 'paused':
+                                      console.log('Upload is paused');
+                                      break;
+                                    case 'running':
+                                      console.log('Upload is running');
+                                      break;
+                                  }
+                                }, 
+                                (error) => {
+                                  // Handle unsuccessful uploads
+                                }, 
+                                () => {
+                                  setUploading(false);
+                                  setConfirmupload(false);
+                                  setuploadIsOpen(false);
+                                  // Handle successful uploads on complete
+                                  // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+                                  router.replace('/dashboard/library/uploads')
+                                }
+                              );
+                              
+                            }}>
                                 <Image src={check} alt='check'/>
-                            </div>
+                            </button>
                         </div>
+                        <div className={`w-[104px] h-14 p-4 bg-zinc-100 rounded-xl justify-start items-center gap-4 inline-flex ${uploading ? "" :  "hidden" } `}>
+
+                        <div className="w-6 h-6 relative">
+                            <div className="w-px h-px left-0 top-0 absolute" />
+                        </div>
+                        <div className="text-emerald-500 text-base font-semibold leading-none">{uploadProgress.toFixed(0)}%</div>
+                        
+                    
+                    </div>
+                    <div className={`text-zinc-950 text-base font-bold leading-none  ${uploading ? "" :  "hidden" }`}>Uploading video</div>
                     </div>
                 </div>
             </div>
@@ -139,6 +261,7 @@ export default function Page ()  {
     </div>
 </div>
         </Modal>
+        
     </div>
     <div className="self-stretch p-6 bg-white rounded-xl justify-between items-center gap-[106px] inline-flex">
         <div className="text-zinc-950 text-base font-medium leading-snug w-[150px]">Record video</div>
@@ -147,7 +270,7 @@ export default function Page ()  {
         }}/>
         <Modal
         isOpen={recordIsOpen}
-        onRequestClose={()=>{setRecordIsOpen(false)}}
+        onRequestClose={()=>{setRecordIsOpen(false);}}
         contentLabel="recordModal"
         className='pt-[8%] px-[40%]'
         ariaHideApp={false}
@@ -162,52 +285,13 @@ export default function Page ()  {
         </button>
     </div>
     <div className='self-stretch grow shrink basis-0 rounded-xl border border-zinc-500 flex-col justify-center items-center gap-2 flex bg-fit bg-center bg-cover overflow-hidden'>
-    <VideoRecorder
-            isOnInitially
-    onRecordingComplete={(videoBlob) => {
-      // Do something with the video... x
-      console.log('videoBlob', videoBlob)
-    }}
-  
-  />  
+      <RecordView close={!recordIsOpen}/>
+
     </div>
      </div>       
-    </Modal>
+        </Modal>
     </div>
 </div>
 </div>
   )
 }
-
-
-
-
-
-
-
-
-
-// <Dropzone onDrop={handleDrop} >
-//   {({getRootProps, getInputProps}) => (
-//           <div className="w-[500px] h-[350px] px-4 pb-4 bg-white rounded-2xl shadow flex-col justify-start items-start inline-flex">
-//     <div className="self-stretch py-4 bg-white justify-between items-center gap-[37px] inline-flex">
-//         <div className="text-zinc-950 text-base font-semibold leading-snug">Upload File</div>
-//         <button onClick={()=>{
-//           setuploadIsOpen(false);
-//         }}>
-//         <Image src={close} alt='close'/>
-//         </button>
-//     </div>
-//     <div className="self-stretch grow shrink basis-0 rounded-xl border border-zinc-500 flex-col justify-center items-center gap-2 flex">
-//         <Image src={upload} alt='upload' width={35}/>
-//         <div className="text-center"><span className="text-zinc-950 text-sm font-medium leading-snug">Drag & drop or </span>
-//         <label htmlFor='file-upload'> <span className="text-zinc-950 text-sm font-bold underline leading-snug">choose file</span></label>
-//         <input type='file' id='file-upload' className='hidden' accept='video/*' onChange={handleDrop}  />
-//         <span className="text-zinc-950 text-sm font-medium leading-snug"> to upload</span>
-        
-//         </div>
-        
-//         <div className="text-zinc-500 text-sm font-medium leading-snug">Only 5 videos will be uploaded.</div>
-//     </div>
-// </div>  )}
-// </Dropzone>

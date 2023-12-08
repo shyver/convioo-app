@@ -2,11 +2,11 @@ import React from 'react'
 import ProfileButton from './ProfileButton'
 import { convioo } from '../assets'
 import Image from 'next/image'
-const Navbar = () => {
+const Navbar = (props) => {
   return (
     <nav className='flex row justify-between bg-white mb-px px-[16px]'> 
     <Image src={convioo} alt="icon"  priority={true}/>
-        <ProfileButton/>
+        <ProfileButton fullname={props.fullname} email={props.email} onClick={props.onClick}/>
     </nav>
   )
 }
