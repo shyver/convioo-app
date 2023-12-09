@@ -5,9 +5,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
     "build": "next build",
+    "export": "next export -o out -p /dashboard/library/page,/dashboard/page",
+    "predeploy": "npm run build && npm run export",
+    "deploy": "gh-pages -d out -b gh-pages -t true",
     "start": "next start",
     "lint": "next lint"
   },

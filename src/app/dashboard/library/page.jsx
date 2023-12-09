@@ -32,7 +32,7 @@ useEffect(() => {
 
   }
 
-}, [user,itemCount])
+}, [user,itemCount,storage])
 
 
 if(listRef!='') {
