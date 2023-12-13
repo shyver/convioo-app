@@ -27,18 +27,17 @@ const [itemCount, setItemCount] = useState(0)
 useEffect(() => {
   if(user){
   setListRef(ref(storage, `${user.uid}/videos/`));
-  console.log(itemCount);
   setstorageRef(ref(storage, `${user.uid}/videos/${itemCount}`));
 
   }
 
-}, [user,itemCount,storage])
+}, [user])
 
 
 if(listRef!='') {
   listAll(listRef)
 .then((res) => {
-  console.log(res.items.length);
+
   setItemCount(res.items.length);
 });
 }
@@ -73,7 +72,7 @@ if(listRef!='') {
             
             <button onClick={startRecording}>Start Recording</button>
             <button onClick={stopRecording}>Stop Recording</button>
-            <CameraPreview close={close}/>
+            {/* <CameraPreview close={close}/> */}
             {/* <VideoPreview stream={previewStream} />;
             <video src={mediaBlobUrl} controls autoPlay loop /> */}
           </div>
@@ -89,8 +88,7 @@ if(listRef!='') {
         setFiles(...acceptedFiles.map(file =>Object.assign(file, {preview: URL.createObjectURL(file)}) )
         
         );
-        console.log(files);
-        console.log(files.length);
+
         if(files)
         {
         setuploadIsOpen(false);
@@ -136,7 +134,7 @@ if(listRef!='') {
   const [uploading, setUploading] = useState(false); 
   return (
     
-    <div className='flex justify-center pt-[10%] '>
+    <div className='flex justify-center pt-[10%] bg-gray-300 w-full '>
     <div className="w-[374px] flex-col justify-start items-center gap-4 inline-flex ">
     <div className="text-zinc-950 text-lg font-medium leading-relaxed tracking-tight">Connect sources to start creating Convis</div>
     <div className="self-stretch p-6 bg-white rounded-xl justify-between items-center gap-[106px] inline-flex">
@@ -268,7 +266,7 @@ if(listRef!='') {
         <OneIconButton src={recordIcon} title='Upload' onClick={()=>{
           setRecordIsOpen(true);
         }}/>
-        <Modal
+        {/* <Modal
         isOpen={recordIsOpen}
         onRequestClose={()=>{setRecordIsOpen(false);}}
         contentLabel="recordModal"
@@ -289,7 +287,7 @@ if(listRef!='') {
 
     </div>
      </div>       
-        </Modal>
+        </Modal> */}
     </div>
 </div>
 </div>

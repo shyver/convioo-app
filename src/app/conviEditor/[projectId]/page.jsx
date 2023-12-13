@@ -26,7 +26,7 @@ export default function Page(props) {
     const [videoURL, setVideoURL] = useState([]);
     const [prev, setPrev] = useState('');
     const [selectedCardId, setSelectedCardId] = useState(0);
-    const [nextCardSelector, setNextCardSelector] = useState(0)
+    const [nextCardSelector, setNextCardSelector] = useState(false)
     const handleEdit = (idToUpdate,newText,newDestination,external) => {
       const updatedOptions = options.map((option) => {
         if (option.id == idToUpdate) {
@@ -98,29 +98,21 @@ export default function Page(props) {
         // Update the state with the new array
         setOptions(newArray);
       };
-      
-      const createNextCard=()=>{
-        setNextCardSelector(1);
+      const initNextCard=()=>
+      {
+        setVideoURL(options[0].destination);
+      setOptions([]);
+      setVideoName('');
+      setPrev(selectedCardId);
+      setSelectedCardId(selectedCardId+1);
+      setOverlayText('');
+      setDone(false);
+
       }
-
-      useEffect(() => {
-        if(nextCardSelector==2)
-        {
-          setVideoURL(options[0].destination);
-        setOptions([]);
-        setVideoName('');
-        setPrev(selectedCardId);
-        setSelectedCardId(selectedCardId+1);
-        setOverlayText('');
-        setDone(false);
-
-        }
-      }, [nextCardSelector])
       
 
       useEffect(() => {
-        
-        const getCard=async ()=>{
+        const getCard= async ()=>{
           
           const fetchedData=await getDoc(doc(db,`scenarios/${user.uid}/${props.projectId}`,`${selectedCardId}`))
             
@@ -133,18 +125,19 @@ export default function Page(props) {
               setVideoURL(fetchedData.data().videosrc);
               setPrev(fetchedData.data().prev);
             }
+        
       
         if(user)
         {
         getCard();
         }
 
-      }, [user])
+      }, [user, ])
       
       
       
     return (
-<div className='flex flex-row h-[90%]'>
+<div className='flex flex-row h-[90%] bg-gray-300'>
     <div className={`w-[404px] bg-white h-full px-[32px] py-[14px] flex flex-col `}>
 
         <Switch LeftTitle='videos' RightTitle='Actions' rightSelected={done} setRightSelected={setDone}/>
@@ -152,9 +145,9 @@ export default function Page(props) {
             <div> File
             <VideoDisplay src={videoURL} setVideoURL={setVideoURL}/>
             </div>
-            <InputBox title='Video name' placeholder='Choose a name for your video' setvalue={setVideoName} textStyle='text-sm' height='h-[40px]' defaultValue={videoName}/>
-            <div className='h-0 w-full border border-neutral-200'></div>
-            <InputBox title='Overlay text' placeholder='Placeholder here' textStyle='text-sm' height='h-[40px]' setvalue={setOverlayText} defaultValue={overlayText}/>
+            <InputBox title='Video name' placeholder='Choose a name for your video' setvalue={setVideoName} titleStyle='text-sm text-black' height='h-[40px]' defaultValue={videoName}/>
+            <div className='h-0 w-full border border-neutral-200' ></div>
+            <InputBox title='Overlay text' placeholder='Placeholder here' titleStyle='text-sm' height='h-[40px]' setvalue={setOverlayText} defaultValue={overlayText}/>
             <div className='h-0 w-full border border-neutral-200'></div>
             <div className='text-zinc-950 text-sm font-semibold'>
                 Select answer type
@@ -224,9 +217,11 @@ export default function Page(props) {
     </div>  
     <div className='w-full h-full flex   justify-center'>
     <ScenarioPiece title={videoName} overlay={overlayText} videosrc={videoURL} options={options} prev={prev} 
-    nextClick={createNextCard}
+    nextClick={()=>{
+      setNextCardSelector(true)
+    }}
     />
-    <Modal isOpen={nextCardSelector==1} className='w-[385px] h-[366px] px-4 py-6 bg-white rounded-2xl shadow flex-col justify-start items-start gap-6 inline-flex'
+    <Modal isOpen={nextCardSelector} className='w-[385px] h-[366px] px-4 py-6 bg-white rounded-2xl shadow flex-col justify-start items-start gap-6 inline-flex'
     overlayClassName='flex items-center justify-center fixed inset-0 bg-black/80'
     >
       <div>
@@ -240,7 +235,8 @@ export default function Page(props) {
     </div>
     <Button RightIcon={arrow} backgroundColor='bg-black' width='w-full' title='Continue' textColor='text-white' onClick={
       ()=>{
-        setNextCardSelector(2);
+        setNextCardSelector(false);
+        initNextCard();
       }
     } />
 

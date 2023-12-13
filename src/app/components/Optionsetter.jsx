@@ -26,7 +26,7 @@ const Optionsetter = ({ id, text, onDragStart, onDragOver, onDrop, onChange, min
     >
       <div className='bg-[#eaf5ff] flex flex-row h-full justify-between items-center rounded-xl p-2 gap-2'>
       <div className='h-6 w-6 bg-blue-700 rounded-full flex justify-center items-center text-bold text-white'> {String.fromCharCode(65+id)}</div>
-      <input type="text" className='bg-transparent ' onChange={onChange} value={text}/>
+      <input type="text" className='bg-transparent text-black' onChange={onChange} value={text}/>
       <button onClick={minusOnClick}>
       <Image src={minusCircle} alt='minus circle' />
       </button>

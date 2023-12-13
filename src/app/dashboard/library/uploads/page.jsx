@@ -41,13 +41,13 @@ const Uploads = (props) => {
   };
   fetchURLs();
 
-  },[itemList,user])
+  },[user])
 
   
 
 
   return (
-    <div className='m-8 h-full overflow-y-scroll w-full scrollbar'>
+    <div className='p-8 h-full overflow-y-scroll w-full scrollbar bg-gray-300'>
       <div className="text-black text-xl font-semibold leading-tight">All Videos</div>
   <ul className='flex flex-wrap gap-2 '>
     {videoURLs.map((url, index) => (
@@ -73,8 +73,6 @@ const Uploads = (props) => {
 export default Uploads
 
 function handleClick(user, props, url, router) {
-  
-    console.log('working, ig?');
     setDoc(doc(db, `scenarios/${user.uid}/${props.projectName}`, '0'), {
       videosrc:url,
       prev:null,

@@ -21,7 +21,7 @@ function Register() {
   useEffect(() => {
     if (loading) return;
     if (user) router.replace("/dashboard");
-  }, [user, loading]);
+  }, [user, loading,router]);
   return (
     <div className="w-screen h-screen bg-white flex justify-center items-center">
       <div className="flex flex-col justify-center gap-2">

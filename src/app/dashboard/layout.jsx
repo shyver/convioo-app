@@ -36,7 +36,7 @@ export default function Layout({ children }) {
       else{
         router.push('/login');
       }
-    }, [user]);
+    }, [user,router]);
 
   return (
     <div className='h-screen max-h-screen overflow-hidden'>

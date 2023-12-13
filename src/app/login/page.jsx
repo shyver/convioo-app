@@ -10,14 +10,12 @@ const Login = ()=>{
   const [user, loading, error] = useAuthState(auth);
   const router = useRouter();
   useEffect(() => {
-    if (loading) {
-      console.log(loading);
+    if (loading) { 
       // maybe trigger a loading screen
       return;
     }
     if (user) {
-      console.log('ure in !')
-      console.log(user);
+
       router.replace("/dashboard");
     
     }
@@ -25,12 +23,14 @@ const Login = ()=>{
   return (
     <div className="w-screen h-screen flex justify-center items-center bg-white">
       <div className="flex flex-col justify-evenly items-center">
+        <form action="submit">
         <input
           type="text"
           className="border"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="E-mail Address"
+          autoComplete="email-address"
         />
         <input
           type="password"
@@ -38,6 +38,7 @@ const Login = ()=>{
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
+          autoComplete="current-password"
         />
         <button
           className="border"
@@ -45,6 +46,7 @@ const Login = ()=>{
         >
           Login
         </button>
+        </form>
         <button className="border" onClick={signInWithGoogle}>
           Login with Google
         </button>

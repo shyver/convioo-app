@@ -17,7 +17,7 @@ const Page = () => {
       }else router.push('/login');
     }
     redirect();
-  }, [user])
+  }, [user,router])
 
 }
 
