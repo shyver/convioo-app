@@ -6,41 +6,46 @@ import OneIconButton from '@/app/components/buttons/OneIconButton'
 import Modal from 'react-modal'
 import Image from 'next/image'
 import VideoThumbnail from 'react-video-thumbnail';
-import { ReactMediaRecorder } from "react-media-recorder";
-import CameraPreview from '@/app/components/CameraPreview';
 import firebase_app from '@/app/config';
 import { getStorage, ref, uploadBytesResumable, listAll } from "firebase/storage";
 import { useRouter } from 'next/navigation'
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '@/app/firebase';
 
-
-
+const storage = getStorage();
 
 export default function Page ()  {
   const router = useRouter();
-  const storage = getStorage();
+
 const [user] = useAuthState(auth);
-const [listRef, setListRef] = useState([]);
-const [storageRef, setstorageRef] = useState([])
+const storageRef = useRef([])
 const [itemCount, setItemCount] = useState(0)
+const [uploadIsOpen, setuploadIsOpen] = React.useState(false);
+const [recordIsOpen, setRecordIsOpen] = useState(false);
+const [confirmupload, setConfirmupload] = useState(false);
+const [files,setFiles]= useState([]);
+const [thumbnail, setThumbnail] = useState('');
+const [uploadProgress, setUploadProgress] = useState(0);
+const [uploading, setUploading] = useState(false); 
+
+
 useEffect(() => {
   if(user){
-  setListRef(ref(storage, `${user.uid}/videos/`));
-  setstorageRef(ref(storage, `${user.uid}/videos/${itemCount}`));
-
+  const listRef = ref(storage, `${user.uid}/videos/`);
+  storageRef.current=ref(storage, `${user.uid}/videos/${itemCount}`);
+  if(listRef!='') {
+    listAll(listRef)
+  .then((res) => {
+  
+    setItemCount(res.items.length);
+  });
+  }
   }
 
-}, [user])
+}, [user,itemCount])
 
 
-if(listRef!='') {
-  listAll(listRef)
-.then((res) => {
 
-  setItemCount(res.items.length);
-});
-}
 
 
 
@@ -63,23 +68,23 @@ if(listRef!='') {
   
 
 
-  const RecordView = () => (
-    <div  className='w-full'>
-      <ReactMediaRecorder 
-        video askPermissionOnMount={true} 
-        render={({ status, startRecording, stopRecording, mediaBlobUrl, previewStream }) => (
-          <div>
+  // const RecordView = () => (
+  //   <div  className='w-full'>
+  //     <ReactMediaRecorder 
+  //       video askPermissionOnMount={true} 
+  //       render={({ status, startRecording, stopRecording, mediaBlobUrl, previewStream }) => (
+  //         <div>
             
-            <button onClick={startRecording}>Start Recording</button>
-            <button onClick={stopRecording}>Stop Recording</button>
-            {/* <CameraPreview close={close}/> */}
-            {/* <VideoPreview stream={previewStream} />;
-            <video src={mediaBlobUrl} controls autoPlay loop /> */}
-          </div>
-        )}
-      />
-    </div>
-  );
+  //           <button onClick={startRecording}>Start Recording</button>
+  //           <button onClick={stopRecording}>Stop Recording</button>
+  //           {/* <CameraPreview close={close}/> */}
+  //           {/* <VideoPreview stream={previewStream} />;
+  //           <video src={mediaBlobUrl} controls autoPlay loop /> */}
+  //         </div>
+  //       )}
+  //     />
+  //   </div>
+  // );
 
     function MyDropzone() {
 
@@ -125,13 +130,7 @@ if(listRef!='') {
   }
 
 
-  const [uploadIsOpen, setuploadIsOpen] = React.useState(false);
-  const [recordIsOpen, setRecordIsOpen] = useState(false);
-  const [confirmupload, setConfirmupload] = useState(false);
-  const [files,setFiles]= useState([]);
-  const [thumbnail, setThumbnail] = useState('');
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const [uploading, setUploading] = useState(false); 
+
   return (
     
     <div className='flex justify-center pt-[10%] bg-gray-300 w-full '>

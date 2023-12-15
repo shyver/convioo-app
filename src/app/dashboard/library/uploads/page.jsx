@@ -21,27 +21,25 @@ const Uploads = (props) => {
   const router= useRouter();
 
 
-  useEffect(()=>{
-
-    const fetchURLs = async ()=> 
-    {  if(user){
-      const listRef = ref(storage, `${user.uid}/videos/`);
-      const videoList= await listAll(listRef)
-      .then((res) => {
-        setItemList(res.items);
-      });
-      const urls = await Promise.all(
-        itemList.map(async item => {
-        const url = await getDownloadURL(item);
-        return url;
-      })
-    );
-    setVideoURLs(urls);
-    }
-  };
-  fetchURLs();
-
-  },[user])
+  useEffect(() => {
+    const fetchURLs = async () => {
+      if (user) {
+        const listRef = ref(storage, `${user.uid}/videos/`);
+        listAll(listRef)
+          .then(async (res) => {
+            setItemList(res.items);
+            const urls = await Promise.all(
+              res.items.map(async item => {
+                const url = await getDownloadURL(item);
+                return url;
+              })
+            );
+            setVideoURLs(urls);
+          });
+      }
+    };
+    fetchURLs();
+  }, [user]);
 
   
 

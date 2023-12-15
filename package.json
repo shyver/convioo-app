@@ -6,9 +6,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "export": "next export -o out -p /dashboard/library/page,/dashboard/page",
     "predeploy": "npm run build && npm run export",
-    "deploy": "gh-pages -d out -b gh-pages -t true",
+    "deploy": "gh-pages -d out",
     "start": "next start",
     "lint": "next lint"
   },

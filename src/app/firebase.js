@@ -1,9 +1,10 @@
 // Import the functions you need from the SDKs you need
+'use client'
 import React from "react";
 import { initializeApp, getApps } from "firebase/app";
 import { getAuth,GoogleAuthProvider, createUserWithEmailAndPassword,signInWithPopup,signInWithEmailAndPassword,sendPasswordResetEmail,signOut } from "firebase/auth";
 import {getFirestore,query,getDocs,collection,where,setDoc,doc} from 'firebase/firestore'
-
+import { useAuthState } from "react-firebase-hooks/auth";
 const firebaseConfig = {
     apiKey: "AIzaSyASOEmk7hmcrgMJoilEekXVu0fCH7sTCpQ",
     authDomain: "convioo-395117.firebaseapp.com",
@@ -17,6 +18,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+
 
 
 
