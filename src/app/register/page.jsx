@@ -27,36 +27,36 @@ function Register() {
       <div className="flex flex-col justify-center gap-2">
         <input
           type="text"
-          className="border"
+          className="border text-black"
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Full Name"
         />
         <input
           type="text"
-          className="border"
+          className="border text-black"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="E-mail Address"
         />
         <input
           type="password"
-          className="border"
+          className="border text-black"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
         />
-        <button className="register__btn" onClick={register}>
+        <button className="text-black" onClick={register}>
           Register
         </button>
         <button
-          className="register__btn register__google"
+          className="text-black"
           onClick={signInWithGoogle}
         >
           Register with Google
         </button>
-        <div>
-          Already have an account? <a href="/">Login</a> now.
+        <div className="text-black">
+          Already have an account? <a className="text-indigo-500" href="/">Login</a> now.
         </div>
       </div>
     </div>

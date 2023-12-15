@@ -21,12 +21,11 @@ const Login = ()=>{
     }
   }, [user, loading,router]);
   return (
-    <div className="w-screen h-screen flex justify-center items-center bg-white">
+    <div className="w-screen h-screen flex justify-center items-center bg-white flex-row">
       <div className="flex flex-col justify-evenly items-center">
-        <form action="submit">
         <input
           type="text"
-          className="border"
+          className="border text-black"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="E-mail Address"
@@ -34,27 +33,26 @@ const Login = ()=>{
         />
         <input
           type="password"
-          className="border"
+          className="border text-black"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
           autoComplete="current-password"
         />
         <button
-          className="border"
+          className="border text-black"
           onClick={() => {logInWithEmailAndPassword(email, password)}}
         >
           Login
         </button>
-        </form>
-        <button className="border" onClick={signInWithGoogle}>
+        <button className="border text-black" onClick={signInWithGoogle}>
           Login with Google
         </button>
-        <div>
+        <div className="text-indigo-500">
           <a href="/reset">Forgot Password</a>
         </div>
-        <div>
-          Don&apos;t have an account? <a href="/register">Register</a> now.
+        <div className="text-black">
+          Don&apos;t have an account? <a className="text-indigo-500" href="/register">Register</a> now.
         </div>
       </div>
     </div>
