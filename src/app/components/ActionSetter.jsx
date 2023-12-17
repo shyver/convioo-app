@@ -12,7 +12,7 @@ const ActionSetter = (props) => {
             {String.fromCharCode(65+props.option.id)}
           </div>
           
-          <div>{props.option.title}</div>
+          <div className='text-black'>{props.option.title}</div>
         </div>
         <div className='text-zinc-950 text-sm font-semibold'>
             Go To

@@ -17,6 +17,7 @@ const VideoSelector = (props) => {
     const [itemList, setItemList] = useState([]);
     const [videoURLs, setVideoURLs] = useState([]);
   useEffect(()=>{
+    console.log('seeing if the problem is in the video selector');
 
     const fetchURLs = async ()=> 
     {  if(user){
@@ -36,7 +37,7 @@ const VideoSelector = (props) => {
   };
   fetchURLs();
 
-  },[itemList,user])
+  },[user])
   return (
     <Modal isOpen={props.isOpen} className='h-[70%] bg-neutral-300 w-[70%] rounded-xl  flex flex-col gap-px overflow-hidden' overlayClassName='flex items-center justify-center fixed inset-0 bg-black/80' >
           <div className='font-bold text-lg bg-white p-2 flex flex-row justify-between px-2'>

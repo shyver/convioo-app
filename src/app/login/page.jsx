@@ -23,6 +23,7 @@ const Login = ()=>{
   return (
     <div className="w-screen h-screen flex justify-center items-center bg-white flex-row">
       <div className="flex flex-col justify-evenly items-center">
+        <form >
         <input
           type="text"
           className="border text-black"
@@ -39,6 +40,7 @@ const Login = ()=>{
           placeholder="Password"
           autoComplete="current-password"
         />
+        </form>
         <button
           className="border text-black"
           onClick={() => {logInWithEmailAndPassword(email, password)}}

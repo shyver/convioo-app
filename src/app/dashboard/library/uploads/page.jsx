@@ -24,6 +24,7 @@ const Uploads = (props) => {
   useEffect(() => {
     const fetchURLs = async () => {
       if (user) {
+        try{
         const listRef = ref(storage, `${user.uid}/videos/`);
         listAll(listRef)
           .then(async (res) => {
@@ -36,7 +37,10 @@ const Uploads = (props) => {
             );
             setVideoURLs(urls);
           });
+      }catch(err){
+        console.log(err);
       }
+    }
     };
     fetchURLs();
   }, [user]);

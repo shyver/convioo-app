@@ -42,7 +42,7 @@ useEffect(() => {
   }
   }
 
-}, [user,itemCount])
+}, [user])
 
 
 

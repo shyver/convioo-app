@@ -113,6 +113,7 @@ const ConviEditor = (props) => {
       
 
       useEffect(() => {
+        console.log('checking useEffect runs just in case');
         const getCard= async ()=>{
           
           const fetchedData=await getDoc(doc(db,`scenarios/${user.uid}/${props.projectId}`,`${selectedCardId}`))
