@@ -6,8 +6,7 @@ import firebase_app from '@/app/config';
 import { useRouter } from 'next/navigation';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '@/app/firebase';
-import { db } from '@/app/firebase';
-import { setDoc,doc } from 'firebase/firestore';
+
 
 const storage = getStorage();
 
@@ -58,7 +57,7 @@ const Uploads = (props) => {
       <VideoCard videoURL={url} videoTitle={itemList[index].name} onClick={()=>{
         {props.setSelectedVideo ?props.setSelectedVideo(url): null};
         {props.setModalState ? props.setModalState(false): null};
-        {props.projectName ? handleClick(user, props, url, router)
+        {props.projectName ? props.handleClick(user, props.projectName, url, router)
         
     : null}
       }}/>
@@ -74,15 +73,4 @@ const Uploads = (props) => {
 
 export default Uploads
 
-function handleClick(user, props, url, router) {
-    setDoc(doc(db, `scenarios/${user.uid}/${props.projectName}`, '0'), {
-      videosrc:url,
-      prev:null,
-      title:'',
-      overlay: '',
-      options:[]
-    }).then(() => {
-      console.log('upload done!');
-    });
-    router.replace(`conviEditor/${props.projectName}`);
-  }
+

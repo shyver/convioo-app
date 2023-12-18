@@ -12,9 +12,25 @@ import SourceButton from '../components/buttons/SourceButton';
 import Uploads from '../dashboard/library/uploads/page';
 import Secondmenu from '../components/secondmenu';
 import InputBox from '../components/InputBox';
+import UploadModal from '../components/UploadModal';
+import { setDoc,doc } from 'firebase/firestore';
+import { db } from '../firebase';
 
+function handleClick(user, projectName, url, router) {
+  setDoc(doc(db, `scenarios/${user.uid}/${projectName}`, '0'), {
+    videosrc:url,
+    prev:null,
+    title:'',
+    overlay: '',
+    options:[]
+  }).then(() => {
+    console.log('upload done!');
+  });
+  router.replace(`conviEditor/${projectName}`);
+}
 
 const Page = () => {
+  
     const storage =getStorage();
     const [chooseFolder, setChooseFolder] = useState(false);
     const [selectedFolder, setSelectedFolder] = useState('Choose folder');
@@ -24,6 +40,7 @@ const Page = () => {
     const [projectName, setProjectName] = useState('');
     const [libraryState, setLibraryState] = useState(false);
     const [selectedVideo, setSelectedVideo] = useState([]);
+    const [uploadIsOpen, setUploadIsOpen] = useState(false);
 
   useEffect(() => {
     async function listFolders() {
@@ -37,7 +54,10 @@ const Page = () => {
     }
 
     listFolders();
-  }, [listRef]);
+  },[]);
+
+
+
   return (
     <div className='bg-[#f4f4f5]'> 
     <AnimatePresence>
@@ -59,7 +79,7 @@ const Page = () => {
       exit={{ opacity: 0, y: -30 }}
     >
         
-                {sourceChoosing(libraryState,setLibraryState , setSelectedVideo, projectName)}
+                {sourceChoosing(libraryState,setLibraryState , setSelectedVideo, selectedVideo, projectName, uploadIsOpen, setUploadIsOpen)}
     </motion.div>
         )
 
@@ -148,34 +168,39 @@ function nameAndFolderSetting(setChooseFolder, selectedFolder, chooseFolder, set
   </div>;
 }
 
-function sourceChoosing(libraryState,setLibraryState, setSelectedVideo , projectName){
+function sourceChoosing(libraryState,setLibraryState, setSelectedVideo, selectedVideo , projectName , uploadIsOpen, setUploadIsOpen){
   return (
     <div className="w-screen h-screen pt-[155px] pb-[514px] bg-zinc-100 justify-center items-center inline-flex">
     <div className=" self-stretch flex-col justify-start items-start gap-8 inline-flex h-full">
         <div className="text-zinc-950 text-xl font-medium">How would you like to create this step?</div>
         <div className="self-stretch h-[392px] flex-col justify-start items-start gap-4 flex ">
             <SourceButton title='Choose from library' icon={dashIconBlue} onClick={()=>{setLibraryState(true)}}/>
-            <Modal isOpen={libraryState} className='h-[500px] w-[80%] bg-[#e2e6e7] rounded-lg overflow-hidden ' overlayClassName={`fixed inset-0 flex items-center justify-center
-            bg-black bg-opacity-70 z-50 `} 
-            ariaHideApp={false}>
-            <div className='flex flex-row justify-between h-[54px] items-center px-4 border-b border-neutral-200 bg-white'>
+            <Modal isOpen={libraryState} className='h-[600px] w-[80%] bg-white rounded-lg overflow-hidden ' overlayClassName={`fixed inset-0 flex items-center justify-center
+              bg-black bg-opacity-70 z-50 `} 
+              ariaHideApp={false}>
+              <div className='flex flex-row justify-between h-[54px] items-center px-4 border-b border-neutral-200 bg-white'>
 
-                <div className='text-zinc-950 text-base font-semibold leading-snug'>Video files</div>
-                  <button onClick={()=>{
-                    setLibraryState(false);
-                  }}>
-                    <Image src={close} alt={close} />
-                  </button>
-                </div>
-            <div className='flex flex-row h-[80%]'>
-            <Secondmenu/>
-            <Uploads setSelectedVideo={setSelectedVideo} setModalState={setLibraryState} projectName={projectName.trim()}/>
-            </div>
+                  <div className='text-zinc-950 text-base font-semibold leading-snug'>Video files</div>
+                    <button onClick={()=>{
+                      setLibraryState(false);
+                    }}>
+                      <Image src={close} alt={close} />
+                    </button>
+                  </div>
+              <div className='flex flex-row h-[90%]'>
+              <Uploads setSelectedVideo={setSelectedVideo} setModalState={setLibraryState} projectName={projectName.trim()} handleClick={handleClick}/>
+              </div>
             </Modal>
-            <SourceButton title='Upload Video' icon={uploadBlue} />
+            <SourceButton title='Upload Video' icon={uploadBlue} onClick={()=>setUploadIsOpen(true)}/>
+
             <SourceButton title='Record Video' icon={recordIconBlue}/>
             <SourceButton title='Record Screen' icon={screenBlue} />
-            <Button title='Add video later' RightIcon={arrow} width='w-[432px]' />
+            <Button title='Add video later' RightIcon={arrow} width='w-[432px]' textColor='text-black'/>
+            <UploadModal uploadIsOpen={uploadIsOpen} 
+            setUploadIsOpen={setUploadIsOpen} 
+            navigateTo={`/conviEditor/${projectName.trim()}`}
+             handleClick={handleClick} projectName={projectName}
+             />
         </div>
     </div>
 </div>
