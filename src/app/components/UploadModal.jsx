@@ -32,12 +32,9 @@ useEffect(() => {
     if(listRef!='') {
       listAll(listRef)
     .then((res) => {
-        console.log(res.items.length);
       itemCount.current=res.items.length;
-      console.log(itemCount.current);
     });
     }
-    console.log(`effect itemCount.current = ${itemCount.current}`);
 
     }
   

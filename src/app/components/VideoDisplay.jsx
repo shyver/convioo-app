@@ -30,7 +30,10 @@ const VideoDisplay = (props) => {
               
             </div>
         </div>
-        <VideoSelector isOpen={openModal} setIsOpen={setOpenModal} setVideoURL={props.setVideoURL}/>
+        <VideoSelector isOpen={openModal} setIsOpen={setOpenModal} 
+        setVideoURL={props.setVideoURL} setNewVideoId={props.setNewVideoId}
+        selectedCardId={props.selectedCardId}
+        />
 
 
 

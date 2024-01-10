@@ -17,17 +17,15 @@ const VideoSelector = (props) => {
     const [itemList, setItemList] = useState([]);
     const [videoURLs, setVideoURLs] = useState([]);
   useEffect(()=>{
-    console.log('seeing if the problem is in the video selector');
 
     const fetchURLs = async ()=> 
     {  if(user){
       const listRef = ref(storage, `${user.uid}/videos/`);
-      const videoList= await listAll(listRef)
-      .then((res) => {
+      const res= await listAll(listRef);
         setItemList(res.items);
-      });
+      
       const urls = await Promise.all(
-        itemList.map(async item => {
+        res.items.map(async item => {
         const url = await getDownloadURL(item);
         return url;
       })
@@ -56,6 +54,7 @@ const VideoSelector = (props) => {
               <li key={index} className='snap-center'>
               <VideoCard videoURL={url} videoTitle={itemList[index].name} onClick={()=>{
                 props.setVideoURL(url);
+                props.setNewVideoId(props.selectedCardId);
                 props.setIsOpen(false);
               }}/>
               </li>

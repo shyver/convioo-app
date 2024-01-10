@@ -17,7 +17,10 @@ import { setDoc,doc } from 'firebase/firestore';
 import { db } from '../firebase';
 
 function handleClick(user, projectName, url, router) {
-  setDoc(doc(db, `scenarios/${user.uid}/${projectName}`, '0'), {
+  setDoc(doc(db, `scenarios/${user.uid}/folderless/${projectName}`),{
+    id:projectName
+  })
+  setDoc(doc(db, `scenarios/${user.uid}/folderless/${projectName}/cards`, '0'), {
     videosrc:url,
     prev:null,
     title:'',
@@ -37,7 +40,7 @@ const Page = () => {
     const listRef = ref(storage, 'scenarios');
     const [folders, setFolders] = useState([]);
     const [firstScreen, setFirstScreen] = useState(true);
-    const [projectName, setProjectName] = useState('');
+    const [projectName, setProjectName] = useState(0);
     const [libraryState, setLibraryState] = useState(false);
     const [selectedVideo, setSelectedVideo] = useState([]);
     const [uploadIsOpen, setUploadIsOpen] = useState(false);
@@ -134,16 +137,16 @@ function nameAndFolderSetting(setChooseFolder, selectedFolder, chooseFolder, set
           `}>
           <div className="self-stretch mt-4 bg-white justify-between items-center gap-[37px] inline-flex h-fit">
             <div className="text-zinc-950 text-base font-semibold leading-snug">Choose Folder</div>
-            <Button title='New folder' RightIcon={folder} border={true} borderColor='border-neutral-400'/>
+            <Button title='New folder' RightIcon={folder} border={true} borderColor='border-neutral-400' textColor='text-black'/>
           </div>
           <div className="self-stretch h-[58px] flex-col justify-start items-start gap-1 flex">
             <div className="text-zinc-950 text-[10px] font-medium leading-[14px]">Folder name</div>
-            <select className="self-stretch h-14 px-2 py-4 bg-white rounded-lg border border-neutral-200 justify-between items-center inline-flex"
+            <select className=" text-black self-stretch h-14 px-2 py-4 bg-white rounded-lg border border-neutral-200 justify-between items-center inline-flex"
               onChange={(event) => {
                 setSelectedFolder(event.target.value);
               } }
             >
-              <option value="Choose folder">--Choose a folder</option>
+              <option value="Choose folder" className='text-black'>--Choose a folder</option>
               {folders.map((folder, index) => (
                 <option value={folder} key={index}> {folder}</option>
               ))}
@@ -151,7 +154,7 @@ function nameAndFolderSetting(setChooseFolder, selectedFolder, chooseFolder, set
           </div>
           <div className="self-stretch justify-end items-center gap-2.5 inline-flex">
             <div className="justify-end items-center gap-2 flex">
-              <Button title='Cancel' border={true} borderColor='border-neutral-400'
+              <Button title='Cancel' border={true} borderColor='border-neutral-400' textColor='text-black'
                 onClick={() => {
                   setSelectedFolder('Choose folder');
                   setChooseFolder(false);
