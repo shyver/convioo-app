@@ -53,7 +53,7 @@ const VideoSelector = (props) => {
             {videoURLs.map((url,index)=>(
               <li key={index} className='snap-center'>
               <VideoCard videoURL={url} videoTitle={itemList[index].name} onClick={()=>{
-                props.setVideoURL(url);
+                props.handleCardsEdit(false,false,url);
                 props.setNewVideoId(props.selectedCardId);
                 props.setIsOpen(false);
               }}/>

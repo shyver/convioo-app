@@ -32,7 +32,7 @@ const VideoDisplay = (props) => {
         </div>
         <VideoSelector isOpen={openModal} setIsOpen={setOpenModal} 
         setVideoURL={props.setVideoURL} setNewVideoId={props.setNewVideoId}
-        selectedCardId={props.selectedCardId}
+        selectedCardId={props.selectedCardId} handleCardsEdit={props.handleCardsEdit}
         />
 
 

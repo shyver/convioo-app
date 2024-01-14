@@ -8,6 +8,7 @@ const Layout = ({children}) => {
   return (
     <div className='flex flex-row h-full justify-between'>
         <Secondmenu 
+        allDirectory='/dashboard/scenario/uploads'
       allClick={()=>{
         router.replace('/dashboard/scenario/uploads')
       }}/>

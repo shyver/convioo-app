@@ -52,11 +52,11 @@ const ScenarioPiece = (props) => {
   return (
 
     <div className='w-[270px] rounded-b-2xl flex flex-col items-center h-fit ' >
-        <div className='text-black text-sm font-medium w-full text-left  '>{props.title}</div>
+        <div className='text-black text-sm font-medium w-full text-left '>{props.title}</div>
       
       
-      
-      <div className='w-[270px] h-[480px] rounded-2xl relative '>
+      <div id={props.id}>
+      <div className='w-[270px] h-[480px] rounded-2xl relative ' >
         <div className='w-[270px] h-[480px] rounded-2xl  overflow-hidden '>
           <video ref={videoRef} src={props.videosrc} className='h-full w-full object-cover absolute rounded-2xl' autoPlay />
         
@@ -71,7 +71,7 @@ const ScenarioPiece = (props) => {
           
             <button
             onClick={playPauseToggle}
-            className={`h-full flex justify-center items-center w-full ${props.enabled? null : 'hidden'}`}
+            className={`h-full flex justify-center opacity-80 items-center w-full ${props.enabled? null : 'hidden'}`}
             >
               <Image src={play} alt='play'/>
             </button>
@@ -101,6 +101,7 @@ const ScenarioPiece = (props) => {
           <div className='w-[2px] h-14 bg-black'/>
           <SquarePlus onClick={props.nextClick}/>
         
+        </div>
         </div>
     
 

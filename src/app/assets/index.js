@@ -20,12 +20,15 @@ import share from './Share.svg'
 import arrowsRepeat from './arrows-repeat.svg'
 import multiChoice from './Multichoice.svg';
 import addIconWhite from './addIconWhite.svg'
-import play from './play.svg'
+import play from './play.svg';
 import poweredByConvioo from './Powered By convioo.svg';
 import volume from './volume-down.svg';
-import minusCircle from './minus-circle.svg'
-import link from './link.svg'
-import muted from './muted.svg'
+import minusCircle from './minus-circle.svg';
+import link from './link.svg';
+import muted from './muted.svg';
+import trash from './Delete.svg';
+import tick from './tick.svg';
+import folderstack_black from './folderstack_black.svg';
 
 
 export {
@@ -56,6 +59,9 @@ export {
     volume,
     minusCircle,
     link,
-    muted
+    muted,
+    trash,
+    tick,
+    folderstack_black
 
 }
