@@ -29,6 +29,8 @@ import muted from './muted.svg';
 import trash from './Delete.svg';
 import tick from './tick.svg';
 import folderstack_black from './folderstack_black.svg';
+import google from './google.svg';
+import arrowWhite from './arrowWhite.svg';
 
 
 export {
@@ -62,6 +64,8 @@ export {
     muted,
     trash,
     tick,
-    folderstack_black
+    folderstack_black,
+    google,
+    arrowWhite
 
 }

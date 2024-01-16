@@ -48,7 +48,7 @@ const Uploads = (props) => {
 
 
   return (
-    <div className='p-8 h-full overflow-y-scroll w-full scrollbar bg-gray-300'>
+    <div className='p-8 h-full overflow-y-scroll w-full scrollbar bg-[#f4f4f4]'>
       <div className="text-black text-xl font-semibold leading-tight">All Videos</div>
   <ul className='flex flex-wrap gap-2 '>
     {videoURLs.map((url, index) => (

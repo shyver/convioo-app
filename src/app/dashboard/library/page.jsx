@@ -75,7 +75,7 @@ const [recordIsOpen, setRecordIsOpen] = useState(false);
 
   return (
     
-    <div className='flex justify-center pt-[10%] bg-gray-300 w-full '>
+    <div className='flex justify-center pt-[10%] bg-[#f4f4f4] w-full '>
     <div className="w-[374px] flex-col justify-start items-center gap-4 inline-flex ">
     <div className="text-zinc-950 text-lg font-medium leading-relaxed tracking-tight">Connect sources to start creating Convis</div>
     <div className="self-stretch p-6 bg-white rounded-xl flex flex-row justify-between items-center">

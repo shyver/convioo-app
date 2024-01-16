@@ -180,7 +180,7 @@ const ConviEditor = (props) => {
 
       
     return (
-<div className='flex flex-row h-screen bg-gray-300 max-h-full'>
+<div className='flex flex-row h-screen bg-[#f4f4f4] max-h-full'>
     <div className={`w-[404px] bg-white h-[95%] px-[32px] py-[14px] flex flex-col `}>
 
         <Switch LeftTitle='videos' RightTitle='Actions' rightSelected={done} setRightSelected={setDone}/>

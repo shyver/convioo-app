@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation';
 export default function Page() {
     const router = useRouter();
   return (
-    <div className='flex justify-center pt-[10%] bg-gray-300 w-full'>
+    <div className='flex justify-center pt-[10%] bg-[#f4f4f4] w-full'>
 <div className="w-[435px] h-[174px] p-6 bg-white rounded-xl flex-col justify-start items-center gap-4 inline-flex">
     <div className="text-zinc-950 text-base font-medium leading-snug">Create New Scenario</div>
     <div className="flex-col justify-start items-center gap-2 flex">

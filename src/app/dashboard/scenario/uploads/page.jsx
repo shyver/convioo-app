@@ -40,7 +40,7 @@ const Page = () => {
 
   }, [user]);
   return (
-    <div className='bg-gray-300 w-full text-center text-black'>
+    <div className='bg-[#f4f4f4] w-full text-center text-black'>
         <div className='flex flex-row gap-2 '>
         {folders.map((folder) => (
           <Button key={folder.id} title={folder.id} backgroundColor='bg-red-500' 

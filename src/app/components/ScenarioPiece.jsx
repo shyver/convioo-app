@@ -51,14 +51,15 @@ const ScenarioPiece = (props) => {
 
   return (
 
-    <div className='w-[270px] rounded-b-2xl flex flex-col items-center h-fit ' >
+    <div className='w-[270px] rounded-2xl flex flex-col items-center h-fit ' >
         <div className='text-black text-sm font-medium w-full text-left '>{props.title}</div>
       
       
       <div id={props.id}>
-      <div className='w-[270px] h-[480px] rounded-2xl relative ' >
-        <div className='w-[270px] h-[480px] rounded-2xl  overflow-hidden '>
-          <video ref={videoRef} src={props.videosrc} className='h-full w-full object-cover absolute rounded-2xl' autoPlay />
+        <div className={` ${props.enabled ? 'border-4 border-indigo-600' : ''} rounded-[20px] p-px`}>
+      <div className='w-fit h-fit  rounded-[16px] relative   overflow-hidden ' >
+        <div className='w-[270px] h-[480px] rounded-[16px]  overflow-hidden  '>
+          <video ref={videoRef} src={props.videosrc} className='h-full w-full object-cover absolute rounded-[16px]' autoPlay />
         
           <div className={`relative h-full pt-2 bg-gradient-to-b from-black/60 to-10% flex flex-col justify-between items-center ${props.enabled? null : 'bg-black/60' } `}>
             <div className='flex flex-row justify-start items-center w-full pr-4'>
@@ -96,6 +97,7 @@ const ScenarioPiece = (props) => {
         </div>
                 
           
+      </div>
       </div>
       <div className='w-full flex flex-col items-center relative justify-center'>
           <div className='w-[2px] h-14 bg-black'/>

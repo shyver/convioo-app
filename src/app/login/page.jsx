@@ -4,6 +4,10 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { auth, logInWithEmailAndPassword, signInWithGoogle } from "../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
+import GoogleProviderButton from "../components/buttons/GoogleProviderButton";
+import InputBox from "../components/InputBox";
+import Button from "../components/buttons/Button";
+import { arrow, arrowWhite } from "../assets";
 const Login = ()=>{
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,43 +25,49 @@ const Login = ()=>{
     }
   }, [user, loading,router]);
   return (
-    <div className="w-screen h-screen flex justify-center items-center bg-white flex-row">
+    <div className="w-screen h-screen flex justify-center items-center bg-[#f4f4f4] flex-row">
       <div className="flex flex-col justify-evenly items-center">
-        <form >
-        <input
-          type="text"
-          className="border text-black"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="E-mail Address"
-          autoComplete="email-address"
-        />
-        <input
-          type="password"
-          className="border text-black"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
-          autoComplete="current-password"
-        />
-        </form>
-        <button
-          className="border text-black"
-          onClick={() => {logInWithEmailAndPassword(email, password)}}
-        >
-          Login
-        </button>
-        <button className="border text-black" onClick={signInWithGoogle}>
-          Login with Google
-        </button>
-        <div className="text-indigo-500">
-          <a href="/reset">Forgot Password</a>
+        <div className="text-black text-2xl font-medium">
+        Sign in 🤟
         </div>
+        <div className="h-[32px]"/>
+
+          <GoogleProviderButton onClick={signInWithGoogle} />
+          <div className="h-[32px]"/>
+          <div className="flex flex-row w-full h-fit justify-center items-center">
+            <div className="h-px w-full bg-[#A6A6A6]"/>
+            <div className="p-2 text-[#A6A6A6]">OR</div>
+            <div className="h-px w-full bg-[#A6A6A6]"/>
+          </div>
+          <div className="h-[32px]"/>
+
+
+        <form className="input w-full" onSubmit={(e)=>{
+          e.preventDefault();
+          logInWithEmailAndPassword(email, password);
+        }} >
+          <InputBox setvalue={setEmail} title='Email' placeholder='Email Address'/>
+          <div className="h-[16px]"/>
+          
+          <InputBox type="password" setvalue={setPassword} title='Password' placeholder='Password'/>
+          <div className="text-indigo-500 w-full flex justify-end">
+          <a href="/reset">Forgot Password ?</a>
+          
+            </div>
+            <div className="h-[16px]"/>
+        <Button backgroundColor='bg-black' width='w-full' RightIcon={arrowWhite}
+         title='Sign In' textColor='text-white'   type='submit'
+         />
+        
+        </form>
+        <div className="h-[32px]"/>
+
         <div className="text-black">
-          Don&apos;t have an account? <a className="text-indigo-500" href="/register">Register</a> now.
+          Don&apos;t have an account? <a className="text-indigo-500" href="/register">Sign up</a>
         </div>
       </div>
     </div>
   );
+
 }
 export default Login;
