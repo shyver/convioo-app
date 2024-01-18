@@ -71,7 +71,7 @@ const Page = () => {
       exit={{ opacity: 0, y: -30 }}
     >
 
-        {nameAndFolderSetting(setChooseFolder, selectedFolder, chooseFolder, setSelectedFolder, folders, setFirstScreen, setProjectName)}
+        {nameAndFolderSetting(setChooseFolder, selectedFolder, chooseFolder, setSelectedFolder, folders, setFirstScreen, setProjectName,projectName)}
         </motion.div>)}
         </AnimatePresence>
     <AnimatePresence>
@@ -108,7 +108,7 @@ export default Page
 
 
 
-function nameAndFolderSetting(setChooseFolder, selectedFolder, chooseFolder, setSelectedFolder, folders, setFirstScreen, setProjectName) {
+function nameAndFolderSetting(setChooseFolder, selectedFolder, chooseFolder, setSelectedFolder, folders, setFirstScreen, setProjectName, projectName) {
   return <div className="w-full h-screen pt-[236px] pb-[584px] bg-zinc-100 justify-center items-center inline-flex ">
     <div className="w-[416px] self-stretch flex-col justify-start items-start gap-8 inline-flex ">
       <div className="text-zinc-950 text-2xl font-medium">Ok, let&apos;s get started 🤟</div>
@@ -119,7 +119,7 @@ function nameAndFolderSetting(setChooseFolder, selectedFolder, chooseFolder, set
           <button className='self-stretch h-[50px] px-2 py-4 bg-white rounded-lg border border-neutral-200 items-center inline-flex justify-between'
             onClick={() => {
               setChooseFolder(true);
-            } }
+            }}
           >
             <div className={`${selectedFolder == 'Choose folder' ? 'text-gray-400' : 'text-black'}`}>{selectedFolder}</div>
             <Image src={down} alt='down arrow' />
@@ -127,6 +127,9 @@ function nameAndFolderSetting(setChooseFolder, selectedFolder, chooseFolder, set
         </div>
         <Button title='Create Scenario' backgroundColor='bg-black' textColor='text-white' width='w-[416px]' LeftIcon={arrow} 
          onClick={()=>{
+          if(!projectName) 
+          alert('Please enter project name');
+          else
           setFirstScreen(false);
         }}/>
         <Modal className='w-[449px] h-[190px] px-4 pb-4 bg-white rounded-2xl shadow flex-col justify-center items-center gap-4 inline-flex mt-8'
