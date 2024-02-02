@@ -89,6 +89,7 @@ const ConviEditor = (props) => {
 
       useEffect(() => {
 
+
         const getCardList= async ()=>{
           const fetchedData= await getDocs(collection(db,`scenarios/${user.uid}/folderless/${props.projectId}/cards`));
           setCardList(fetchedData.docs);
@@ -183,7 +184,7 @@ const ConviEditor = (props) => {
 <div className='flex flex-row h-screen bg-[#f4f4f4] max-h-full'>
     <div className={`w-[404px] bg-white h-[95%] px-[32px] py-[14px] flex flex-col `}>
 
-        <Switch LeftTitle='videos' RightTitle='Actions' rightSelected={done} setRightSelected={setDone}/>
+        <Switch width='w-350' LeftTitle='videos' RightTitle='Actions' rightSelected={done} setRightSelected={setDone}/>
         <div className={`h-[77%] mt-4 flex flex-col gap-4 overflow-auto w-fit ${done ? 'hidden' : ''} `}>
             <div className='text-black'> File
             <VideoDisplay src={cards.length? cards[selectedCardId].videosrc : null} handleCardsEdit={handleCardsEdit} newVideoId={newVideoId} setNewVideoId={setNewVideoId} selectedCardId={selectedCardId} />
@@ -262,7 +263,7 @@ const ConviEditor = (props) => {
     
     </div>  
 
-    <div className='w-full h-[93%] flex overflow-auto' onLoad={useXarrow()}>
+    <div className='w-full h-[93%] flex overflow-auto relative' onLoad={useXarrow()}>
     {/* <ScenarioPiece title={videoName} overlay={overlayText} videosrc={videoURL} options={options} prev={prev} 
     nextClick={()=>{
       setNextCardSelector(true)

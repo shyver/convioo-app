@@ -10,6 +10,7 @@ import { getDoc,doc } from 'firebase/firestore';
 // }
 
 
-export default function Page(props) {
-      return (<ConviEditor projectId={props.projectId}/>)
+export default function Page({params}) {
+    const projectId = decodeURIComponent(params.projectId);
+      return (<ConviEditor projectId={projectId}/>)
   }

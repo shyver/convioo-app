@@ -52,7 +52,7 @@ const ScenarioPiece = (props) => {
   return (
 
     <div className='w-[270px] rounded-2xl flex flex-col items-center h-fit ' >
-        <div className='text-black text-sm font-medium w-full text-left '>{props.title}</div>
+        <div className='text-black text-sm font-medium w-full text-left h-5'>{props.title}</div>
       
       
       <div id={props.id}>
@@ -82,12 +82,12 @@ const ScenarioPiece = (props) => {
               </div>
               {props.options.map((value,index)=>{
               return value.enabled ? (
-              <OptionButton index={index} title={value.title} key={index} destination={value.destination} external={value.external} />
+              <OptionButton index={index} scroll={true} setCurrentCard={props.setSelectedCardId} title={value.title} key={index} destination={value.destination} external={value.external} />
               ) : null
               })}
 
             </div>
-            <div className='h-[18px] bg-indigo-600/75 w-full flex justify-center items-center text-white text-[10px]'>
+            <div className='h-[18px] min-h-[18px] bg-indigo-600/75 w-full flex justify-center items-center text-white text-[10px]'>
             
             <Image src={poweredByConvioo} alt='powered by convioo' />
           </div>

@@ -9,9 +9,11 @@ import Xarrow from "react-xarrows";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/app/firebase";
 import Modal from 'react-modal';
+import { Space } from "react-zoomable-ui";
 const Canvas = (props) => {
     const [wires, setWires] = useState([]);
     const [showComponent, setShowComponent] = useState(true);
+
     // useEffect(() => { 
     //     const timeout = setTimeout(() => { 
     //       setShowComponent(true); 
@@ -34,14 +36,18 @@ const Canvas = (props) => {
                 })
             })
             setWires(allWires);
+            const firstCard = document.getElementById('0');
+            if(firstCard){
+                firstCard.scrollIntoView({behavior: "smooth", block: "end", inline: "center"});
+            }
         }
         
       }, [props.cards])
-      
 
     // layout is an array of objects, see the demo for more complete usage
     return (
         <Xwrapper>
+                    
             <MapCards cardId={0} user={props.user} projectName={props.projectName}
              setWires={setWires} selectedCardId={props.selectedCardId}
              setSelectedCardId={props.setSelectedCardId} 
@@ -61,7 +67,10 @@ const Canvas = (props) => {
                     </div>
                 )
             }) : null}
+                    
         </Xwrapper>
+
+
     )
 }
 
@@ -75,13 +84,17 @@ const DraggableBox = ({id,options,title,overlay,videosrc,selectedCardId,newVideo
 
 }
   return (
-      <Draggable onDrag={updateXarrow} onStop={updateXarrow} >
+      <Draggable onDrag={updateXarrow} onStop={updateXarrow}  >
           <div  className="w-fit h-fit" onClick={selectedCardId==id ? null : ()=>{ 
                 setSelectedCardId(id);
+                const card = document.getElementById(id);
+                if(card){
+                    card.scrollIntoView({behavior: "smooth", block: "end", inline: "center"});
+                }
                 
           }}>
           <ScenarioPiece  options={options} title={title} overlay={overlay} id={id}
-           videosrc={videosrc} enabled={selectedCardId==id} newVideoId={newVideoId} setNewVideoId={setNewVideoId} 
+           videosrc={videosrc} enabled={selectedCardId==id} newVideoId={newVideoId} setSelectedCardId={setSelectedCardId} setNewVideoId={setNewVideoId} 
             nextClick={()=>{
                 setNextCardSelector(true);
             }}
@@ -97,7 +110,7 @@ const MapCards=({cardId,user, projectName,setWires, selectedCardId,setSelectedCa
     console.log('Cards : ', cards);
     console.log('Card data :', cards[cardId]);
     return cards[cardId] ?(
-        <div className="flex flex-col  w-full items-center gap-20">
+        <div className="flex flex-col  w-fit items-center gap-20">
                         <DraggableBox id={cardId}
                          options={cards[cardId].options}
                            title={cards[cardId].title}
@@ -108,7 +121,9 @@ const MapCards=({cardId,user, projectName,setWires, selectedCardId,setSelectedCa
                              newVideoId={newVideoId} setNewVideoId={setNewVideoId} setCards={setCards}
                              setNextCardSelector={setNextCardSelector}
                              />
-                             <div className="flex flex-row w-full justify-evenly">
+                                
+                             <div className="flex flex-row w-full justify-evenly gap-20">
+                             
                                 {cards[cardId].options.map((option) => {
 
                                     if(!option.external)

@@ -31,6 +31,12 @@ import tick from './tick.svg';
 import folderstack_black from './folderstack_black.svg';
 import google from './google.svg';
 import arrowWhite from './arrowWhite.svg';
+import computer from './computer.svg';
+import computerInactive from './computerInactive.svg';
+import mobile from './mobile.svg';
+import mobileInactive from './mobileInactive.svg';
+import expand from './expand.svg';
+
 
 
 export {
@@ -66,6 +72,11 @@ export {
     tick,
     folderstack_black,
     google,
-    arrowWhite
+    arrowWhite,
+    computer,
+    computerInactive,
+    mobile,
+    mobileInactive,
+    expand
 
 }

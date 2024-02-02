@@ -12,8 +12,8 @@ const ProfileButton = (props) => {
 <div className="text-zinc-950 text-xl font-black leading-normal">{props.fullname? props.fullname.charAt(0):''}</div>
 </div>
 <div className="flex-col justify-center items-start gap-0.5 inline-flex">
-<div className="text-zinc-950 text-sm font-semibold leading-[18px]">{props.fullname}</div>
-<div className="w-[108px] h-[15px] text-neutral-500 text-xs font-medium leading-[14px]">{props.email}</div>
+<div className="h-[15px] text-zinc-950 text-sm font-semibold leading-[18px] text-ellipsis overflow-clip">{props.fullname}</div>
+<div className="w-[160px] h-[15px] text-neutral-500 text-xs font-medium leading-[14px] text-ellipsis overflow-clip">{props.email}</div>
 </div>
 </div>
 </button>

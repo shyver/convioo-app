@@ -1,10 +1,11 @@
 'use client'
 import React from 'react'
-import Page from './page'
 import Button from '@/app/components/buttons/Button'
 import { arrow, settings, share } from '@/app/assets';
-import { useRouter } from 'next/navigation'
-const Layout = ({params}) => {
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import Page from './page';
+const Layout = ({params,children}) => {
   const projectId= decodeURIComponent(params.projectId)
   const router = useRouter();
   return (
@@ -21,14 +22,19 @@ const Layout = ({params}) => {
     </div>
     <div className='flex flex-row gap-2 '>
       <Button LeftIcon={settings} border={true} borderColor='border-[#A6A6A6]' />
+      <Link href={`/preview/${params.projectId}`}>
       <Button LeftIcon={arrow} title='Preview' 
       border={true} borderColor='border-[#A6A6A6] '
       textColor='text-black'
       />
+      </Link>
       <Button LeftIcon={share} backgroundColor='bg-[#10B981]' title='Share' textColor='text-white'/>
     </div>
     </nav>
-    <Page projectId={projectId}/>
+    <main>
+    {children}
+    </main>
+
 </div>
         
     
