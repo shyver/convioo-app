@@ -89,7 +89,8 @@ useEffect(() => {
     <Modal isOpen={props.uploadIsOpen}
         onRequestClose={closeModal}
         contentLabel="dropzone"
-        className='pt-[8%] px-[40%]'
+        className={`w-fit h-fit bg-transparent `}
+        overlayClassName="flex items-center justify-center fixed inset-0 bg-black/80"
         ariaHideApp={false}
         >
           <div className='w-[739px] h-[516px] px-4 pb-4 bg-white rounded-2xl shadow flex-col justify-start items-start inline-flex'>

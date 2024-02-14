@@ -1,17 +1,15 @@
 'use client'
 
 import Switch from '@/app/components/buttons/Switch'
-import { useRouter } from 'next/router';
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useState,useRef} from 'react'
 import VideoDisplay from '@/app/components/VideoDisplay'
 import InputBox from '@/app/components/InputBox'
 import DropList from '@/app/components/buttons/DropList'
 import Button from '@/app/components/buttons/Button'
 import { addIconWhite, arrow} from '@/app/assets'
-import ScenarioPiece from '@/app/components/ScenarioPiece'
 import Optionsetter from '@/app/components/Optionsetter'
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth } from '@/app/firebase';
+import { SaveCards, auth } from '@/app/firebase';
 import { db } from '@/app/firebase';
 import { getDoc,updateDoc,doc, getDocs, collection, addDoc } from 'firebase/firestore';
 import ActionSetter from '@/app/components/ActionSetter'
@@ -19,8 +17,8 @@ import Modal from 'react-modal'
 import OneIconCheckbox from '@/app/components/buttons/OneIconCheckbox'
 import Canvas from './Canvas';
 import Tester from './Tester';
-import { useXarrow } from 'react-xarrows';
 import { setDoc } from 'firebase/firestore';
+
 
 
 const ConviEditor = (props) => {
@@ -36,6 +34,21 @@ const ConviEditor = (props) => {
     const [cards, setCards] = useState([]);
     const [newVideoId, setNewVideoId] = useState(-1);
     const [nextId, setNextId] = useState(-1);
+    const newCardPosition = useRef();
+
+    useEffect(() => {
+      if(cards.length)
+      newCardPosition.current = {x:cards[selectedCardId].position.x,y:cards[selectedCardId].position.y+700};
+    }, [nextCardSelector])
+    
+
+    useEffect(() => {
+      if(props.leaving)
+      {
+        SaveCards(cards,user,props.projectId,db,setDoc, doc);
+      }
+    }, [props.leaving])
+    
 
       const removeOption = (optionId) => {
         // Use the filter method to create a new array without the object to remove
@@ -77,7 +90,8 @@ const ConviEditor = (props) => {
           title:'',
           overlay:'',
           videosrc:'',
-          options:[]
+          options:[],
+          position: newCardPosition.current
         }
         const newCards = [...updatedCards,newCard];
         setCards(newCards);
@@ -110,22 +124,24 @@ const ConviEditor = (props) => {
 
       }, [user])
       
+
+
       const handleCardsEdit=(videoName,overlay,videosrc)=>{
         const updatedCards = cards.map((card,index) => {
           if (index == selectedCardId) {
-            if(videoName && overlay && videosrc)
+            if(videoName!==false && overlay!==false && videosrc!==false)
             return { ...card, title: videoName, overlay:overlay, videosrc:videosrc };
-            else if(videoName && overlay)
+            else if(videoName!==false && overlay!==false)
             return { ...card, title: videoName, overlay:overlay };
-            else if(videoName && videosrc)
+            else if(videoName!==false && videosrc!==false)
             return { ...card, title: videoName, videosrc:videosrc };
-            else if(overlay && videosrc)
+            else if(overlay!==false && videosrc!==false)
             return { ...card, overlay:overlay, videosrc:videosrc };
-            else if(videoName)
+            else if(videoName!==false)
             return { ...card, title: videoName };
-            else if(overlay)
+            else if(overlay!==false)
             return { ...card, overlay:overlay };
-            else if(videosrc)
+            else if(videosrc!==false)
             return { ...card, videosrc:videosrc };
 
           }
@@ -181,13 +197,13 @@ const ConviEditor = (props) => {
 
       
     return (
-<div className='flex flex-row h-screen bg-[#f4f4f4] max-h-full'>
+<div className='flex flex-row w-screen max-w-screen h-screen bg-[#f4f4f4] max-h-full'>
     <div className={`w-[404px] bg-white h-[95%] px-[32px] py-[14px] flex flex-col `}>
 
-        <Switch width='w-350' LeftTitle='videos' RightTitle='Actions' rightSelected={done} setRightSelected={setDone}/>
-        <div className={`h-[77%] mt-4 flex flex-col gap-4 overflow-auto w-fit ${done ? 'hidden' : ''} `}>
+        <Switch width='w-[340px] p-px' LeftTitle='videos' RightTitle='Actions' rightSelected={done} setRightSelected={setDone}/>
+        <div className={`h-[77%] w-fit mt-4 flex flex-col gap-4 overflow-auto  ${done ? 'hidden' : ''} `}>
             <div className='text-black'> File
-            <VideoDisplay src={cards.length? cards[selectedCardId].videosrc : null} handleCardsEdit={handleCardsEdit} newVideoId={newVideoId} setNewVideoId={setNewVideoId} selectedCardId={selectedCardId} />
+            <VideoDisplay user={user} src={cards.length? cards[selectedCardId].videosrc : null} handleCardsEdit={handleCardsEdit} newVideoId={newVideoId} setNewVideoId={setNewVideoId} selectedCardId={selectedCardId} />
             </div>
             <InputBox title='Video name' placeholder='Choose a name for your video'
             handleCardsEdit={handleCardsEdit} edit='videoName'
@@ -219,6 +235,7 @@ const ConviEditor = (props) => {
           minusOnClick={()=>{
             removeOption(item.id);
           }}
+          
         />
       )}):null}
             </div>
@@ -231,7 +248,7 @@ const ConviEditor = (props) => {
             
             
         </div>
-        <div className={` ${done?'':'hidden'} overflow-y-auto`}>
+        <div className={` ${done?'':'hidden'} mt-4 overflow-y-auto`}>
           {cards.length ? cards[selectedCardId].options.map((item)=>
             {
               return  item.enabled ? (<ActionSetter key={item.id} option={item} handleOptionsEdit={handleOptionsEdit} cards={cards} selectedCardId={selectedCardId}/>) :  null
@@ -244,42 +261,32 @@ const ConviEditor = (props) => {
         <Button title='Done' backgroundColor='bg-black' textColor='text-white' width='w-[350px]'  onClick={()=>{
           if(!done) setDone(true);
           else{
-            cards.map((card,index)=>{
-              try{
-              setDoc(doc(db, `scenarios/${user.uid}/folderless/${props.projectId}/cards`, `${index}`), {
-                title: card.title,
-                overlay: card.overlay,
-                videosrc: card.videosrc,
-                options: card.options
-            })}catch(e){
-              console.log(e);
-            }
-            }
-            );
-            alert('Saved!');
+            SaveCards(cards,user,props.projectId,db,setDoc, doc);
           }
 }}/>
         </div>
     
     </div>  
 
-    <div className='w-full h-[93%] flex overflow-auto relative' onLoad={useXarrow()}>
-    {/* <ScenarioPiece title={videoName} overlay={overlayText} videosrc={videoURL} options={options} prev={prev} 
-    nextClick={()=>{
-      setNextCardSelector(true)
-    }}
-    />
-     */}
+    <div className='w-[50vw] max-w-[100vw] h-fit'  >
 
-     <Canvas cards={cards} setCards={setCards}
+     {/* <Canvas cards={cards} setCards={setCards}
       user={user} projectName={props.projectId}
       selectedCardId={selectedCardId} setSelectedCardId={setSelectedCardId} 
         setNewVideoId={setNewVideoId} newVideoId={newVideoId} setNextCardSelector={setNextCardSelector}
-      />
+      /> */}
 
-      {/* <Tester/> */}
+      <Canvas cards={cards} setCards={setCards} selectedCardId={selectedCardId}
+       setSelectedCardId={setSelectedCardId} 
+        setNewVideoId={setNewVideoId} newVideoId={newVideoId} setNextCardSelector={setNextCardSelector}
+
+       
+       
+       />
 
     </div>
+
+
     <Modal isOpen={nextCardSelector} className='w-[385px] h-[366px] px-4 py-6 bg-white rounded-2xl shadow flex-col justify-start items-start gap-6 inline-flex'
     overlayClassName='flex items-center justify-center fixed inset-0 bg-black/80' onRequestClose={()=>{setNextCardSelector(false)}}
     >

@@ -49,7 +49,7 @@ const ScenarioCard = (props) => {
         props.setIsMuted((prevState) => !prevState);
       };
   return (
-    <div className='w-fit h-fit  rounded-[16px] relative   overflow-hidden ' >
+    <div className={`w-fit h-fit  rounded-[16px] relative   overflow-hidden ${props.className} `} >
         <div className={`${props.onMobile ? 'w-[270px] ':'w-[909px]'} transition-all h-[480px] rounded-[16px]  overflow-hidden  `}>
           <video ref={videoRef} src={props.cardData ? props.cardData.videosrc : ''} 
           className='h-full w-full object-cover absolute rounded-[16px]' autoPlay

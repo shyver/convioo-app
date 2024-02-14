@@ -1,6 +1,6 @@
-import { google } from '@/app/assets'
 import React from 'react'
 import Image from 'next/image'
+import { google } from '../../assets'
 
 const GoogleProviderButton = (props) => {
   return (

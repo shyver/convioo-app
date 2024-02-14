@@ -1,5 +1,5 @@
 'use client'
-import React from 'react'
+import React, { useState } from 'react'
 import Button from '@/app/components/buttons/Button'
 import { arrow, settings, share } from '@/app/assets';
 import { useRouter } from 'next/navigation';
@@ -8,6 +8,8 @@ import Page from './page';
 const Layout = ({params,children}) => {
   const projectId= decodeURIComponent(params.projectId)
   const router = useRouter();
+  const [leaving, setLeaving] = useState(false);
+  
   return (
     <div className='h-screen bg-[f4f4f4] overflow-hidden'>
     <nav className='h-[54px] bg-white flex items-center flex-row justify-between px-2'>
@@ -26,13 +28,16 @@ const Layout = ({params,children}) => {
       <Button LeftIcon={arrow} title='Preview' 
       border={true} borderColor='border-[#A6A6A6] '
       textColor='text-black'
+      onClick={()=>{
+        setLeaving(true);
+      }}
       />
       </Link>
       <Button LeftIcon={share} backgroundColor='bg-[#10B981]' title='Share' textColor='text-white'/>
     </div>
     </nav>
     <main>
-    {children}
+      <Page params={params} leaving={leaving} />
     </main>
 
 </div>

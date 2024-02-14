@@ -4,9 +4,9 @@ import React,{useState} from 'react'
 const Switch = (props) => {
 
   return (
-    <div className={`h-[40px] ${props.width} bg-[#F4F4F4] rounded-lg flex flex-row justify-evenly items-center overflow-hidden p-[2px] border border-neutral-200`} >
-      <div className={`${props.width} h-[40px] absolute z-0 `} >
-      <div className={`w-[50%] h-full bg-white rounded-md transition-all ${props.rightSelected? 'ml-[50%]':''}`}>
+    <div className={`h-[40px] ${props.width} bg-[#F4F4F4] rounded-lg  flex flex-row justify-evenly items-center overflow-hidden p-[2px] border border-neutral-200`} >
+      <div className={`${props.width} h-[40px] max-h-[40px] absolute z-0 `} >
+      <div className={`w-[50%] min-w-[50%] h-full bg-white  rounded-md transition-all ${props.rightSelected? 'ml-[50%]':''}`}>
 
       </div>
       </div>

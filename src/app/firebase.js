@@ -82,6 +82,22 @@ const logInWithEmailAndPassword = async (email, password) => {
     signOut(auth);
   };
 
+  const SaveCards=async(cards, user, projectId, db, setDoc, doc)=>{
+    cards.map((card,index)=>{
+      try{
+      setDoc(doc(db, `scenarios/${user.uid}/folderless/${projectId}/cards`, `${index}`), {
+        title: card.title,
+        overlay: card.overlay,
+        videosrc: card.videosrc,
+        options: card.options,
+        position: card.position
+    })}catch(e){
+      console.log(e);
+      alert('There was a problem saving your cards. Please try again later');
+    }
+    }
+    );
+  }
 // Initialize Firebase
 export {
     auth,
@@ -91,4 +107,5 @@ export {
     registerWithEmailAndPassword,
     sendPasswordReset,
     logout,
+    SaveCards
   };

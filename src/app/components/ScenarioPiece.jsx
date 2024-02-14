@@ -3,6 +3,7 @@ import { play, poweredByConvioo, volume, muted } from '../assets';
 import Image from 'next/image';
 import OptionButton from './buttons/OptionButton';
 import SquarePlus from './buttons/SquarePlus';
+import { Handle, Position } from 'reactflow';
 const ScenarioPiece = (props) => {
   const videoRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -54,9 +55,13 @@ const ScenarioPiece = (props) => {
     <div className='w-[270px] rounded-2xl flex flex-col items-center h-fit ' >
         <div className='text-black text-sm font-medium w-full text-left h-5'>{props.title}</div>
       
-      
+        
       <div id={props.id}>
-        <div className={` ${props.enabled ? 'border-4 border-indigo-600' : ''} rounded-[20px] p-px`}>
+        <div>
+
+        </div>
+
+        <div className={` ${props.enabled ? 'border-4 border-indigo-600' : ''} rounded-[20px] py-px px-px`}>
       <div className='w-fit h-fit  rounded-[16px] relative   overflow-hidden ' >
         <div className='w-[270px] h-[480px] rounded-[16px]  overflow-hidden  '>
           <video ref={videoRef} src={props.videosrc} className='h-full w-full object-cover absolute rounded-[16px]' autoPlay />
@@ -72,17 +77,17 @@ const ScenarioPiece = (props) => {
           
             <button
             onClick={playPauseToggle}
-            className={`h-full flex justify-center opacity-80 items-center w-full ${props.enabled? null : 'hidden'}`}
+            className={` h-full flex justify-center opacity-80 items-center w-full ${props.enabled? null : 'hidden'}`}
             >
-              <Image src={play} alt='play'/>
+              <Image src={play} alt='play' />
             </button>
-            <div className={`w-full flex flex-col items-center ${props.enabled? null : 'hidden'}`}>
+            <div className={`w-full  flex flex-col items-center ${props.enabled? null : 'hidden'}`}>
               <div className={` text-stroke w-full flex justify-center font-medium text-center px-2  `}>
                 {props.overlay}
               </div>
               {props.options.map((value,index)=>{
               return value.enabled ? (
-              <OptionButton index={index} scroll={true} setCurrentCard={props.setSelectedCardId} title={value.title} key={index} destination={value.destination} external={value.external} />
+              <OptionButton onMobile={true} index={index} scroll={true} setCurrentCard={props.setSelectedCardId} title={value.title} key={index} destination={value.destination} external={value.external} />
               ) : null
               })}
 
@@ -99,15 +104,19 @@ const ScenarioPiece = (props) => {
           
       </div>
       </div>
-      <div className='w-full flex flex-col items-center relative justify-center'>
-          <div className='w-[2px] h-14 bg-black'/>
-          <SquarePlus onClick={props.nextClick}/>
-        
-        </div>
-        </div>
-    
+      {
+        props.options.length ? <div className='w-full flex flex-col items-center relative justify-center'>
+        <div className='w-[2px] h-14 bg-black'/>
+
+        <SquarePlus onClick={props.nextClick}/>
+    </div> : null
+      }
+      
 
     </div>
+    
+
+  </div>
   )
 }
 

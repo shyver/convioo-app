@@ -25,7 +25,8 @@ function handleClick(user, projectName, url, router) {
     prev:null,
     title:'',
     overlay: '',
-    options:[]
+    options:[],
+    position: {x:300,y:0}
   }).then(() => {
     console.log('upload done!');
   });
