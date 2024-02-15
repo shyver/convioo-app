@@ -11,6 +11,7 @@ import { arrow, arrowWhite } from "../assets";
 const Login = ()=>{
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [user, loading, error] = useAuthState(auth);
   const router = useRouter();
   useEffect(() => {
@@ -44,7 +45,7 @@ const Login = ()=>{
 
         <form className="input w-full" onSubmit={(e)=>{
           e.preventDefault();
-          logInWithEmailAndPassword(email, password);
+          logInWithEmailAndPassword(email, password, setErrorMessage);
         }} >
           <InputBox setvalue={setEmail} title='Email' placeholder='Email Address'/>
           <div className="h-[16px]"/>
@@ -60,6 +61,7 @@ const Login = ()=>{
          />
         
         </form>
+        <div className="text-red-500 font-semibold">{errorMessage}</div>
         <div className="h-[32px]"/>
 
         <div className="text-black">

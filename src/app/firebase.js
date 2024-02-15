@@ -42,12 +42,15 @@ const signInWithGoogle = async () => {
     alert(err.message);
   }
 };
-const logInWithEmailAndPassword = async (email, password) => {
+const logInWithEmailAndPassword = async (email, password,setErrorMessage) => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
     } catch (err) {
       console.error(err);
-      alert(err.message);
+
+      if(err.code==='auth/invalid-credential'){
+        setErrorMessage('User not found. Please register first');
+      }
     }
   };
 

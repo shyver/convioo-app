@@ -106,7 +106,8 @@ useEffect(() => {
         isOpen={confirmupload}
         onRequestClose={closeModal}
         contentLabel="dropzone"
-        className='pt-[8%] px-[40%]'
+        className={`w-fit h-fit bg-transparent `}
+        overlayClassName="flex items-center justify-center fixed inset-0 bg-black/80"
         ariaHideApp={false}
         >
           <div className="w-[739px] h-[516px] px-4 pb-4 bg-white rounded-2xl shadow flex-col justify-start items-start inline-flex">
@@ -114,7 +115,7 @@ useEffect(() => {
           <div className="text-zinc-950 text-base font-semibold leading-snug">Uploading File</div>
         <button onClick={()=>{
           setConfirmupload(false);
-          props.setuploadIsOpen(true);
+          props.setUploadIsOpen(true);
         }}>
         <Image src={close} alt='close'/>
         </button>
@@ -140,7 +141,7 @@ useEffect(() => {
                         <div className={`justify-center items-center gap-2 flex ${uploading ? "hidden" :  "" }`}>
                           <button onClick={()=>{
                             setConfirmupload(false);
-                            props.setuploadIsOpen(true);
+                            props.setUploadIsOpen(true);
                           }}>
                             <div className="p-4 bg-rose-100 rounded-xl justify-start items-center gap-4 flex">
                                 <Image src={smallcross} alt='smallcross'/>
