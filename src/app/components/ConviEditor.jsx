@@ -23,11 +23,7 @@ import { setDoc } from 'firebase/firestore';
 
 const ConviEditor = (props) => {
     const [user]= useAuthState(auth);
-    const [videoName, setVideoName] = useState('');
-    const [overlayText, setOverlayText] = useState('');
     const [done, setDone] = useState(false);
-    const [options, setOptions] = useState([]);
-    const [videoURL, setVideoURL] = useState([]);
     const [selectedCardId, setSelectedCardId] = useState(0);
     const [nextCardSelector, setNextCardSelector] = useState(false);
     const [cardList, setCardList] = useState([]);
@@ -45,10 +41,11 @@ const ConviEditor = (props) => {
     useEffect(() => {
       if(props.leaving)
       {
-        SaveCards(cards,user,props.projectId,db,setDoc, doc);
+        SaveCards(cards,user,props.folder,props.projectId,db,setDoc, doc);
       }
     }, [props.leaving])
-    
+
+
 
       const removeOption = (optionId) => {
         // Use the filter method to create a new array without the object to remove
@@ -105,10 +102,10 @@ const ConviEditor = (props) => {
 
 
         const getCardList= async ()=>{
-          const fetchedData= await getDocs(collection(db,`scenarios/${user.uid}/folderless/${props.projectId}/cards`));
+          const fetchedData= await getDocs(collection(db,`scenarios/${user.uid}/${props.folder}/${props.projectId}/cards`));
           setCardList(fetchedData.docs);
           const cardPromises = fetchedData.docs.map((document) => {
-            return getDoc(doc(db, `scenarios/${user.uid}/folderless/${props.projectId}/cards`, `${document.id}`));
+            return getDoc(doc(db, `scenarios/${user.uid}/${props.folder}/${props.projectId}/cards`, `${document.id}`));
           });
           const cardDataList = await Promise.all(cardPromises);
           const allCards = cardDataList.map(cardData => cardData.data());
@@ -261,7 +258,7 @@ const ConviEditor = (props) => {
         <Button title='Done' backgroundColor='bg-black' textColor='text-white' width='w-[350px]'  onClick={()=>{
           if(!done) setDone(true);
           else{
-            SaveCards(cards,user,props.projectId,db,setDoc, doc);
+            SaveCards(cards,user,props.folder,props.projectId,db,setDoc, doc);
           }
 }}/>
         </div>

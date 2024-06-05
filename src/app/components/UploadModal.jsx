@@ -9,7 +9,7 @@ import { upload,  close, smallcross, check } from '@/app/assets'
 import { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth } from '@/app/firebase';
+import { auth, uploadVideo } from '@/app/firebase';
 import { getDownloadURL } from 'firebase/storage';
 
 const storage = getStorage();
@@ -148,6 +148,7 @@ useEffect(() => {
                             </div>
                             </button>
                             <button className="p-4 bg-teal-100 rounded-xl justify-start items-center gap-4 flex" onClick={() => {
+                              // uploadVideo(storageRef, files, setUploading, setUploadProgress, setConfirmupload, props.setUploadIsOpen, props.handleClick, props.projectName, props.navigateTo, user, router, props.currentFolder)
                               setUploading(true);
                               const uploadTask = uploadBytesResumable(storageRef.current, files);
                               uploadTask.on('state_changed', 
@@ -173,7 +174,6 @@ useEffect(() => {
                                     getDownloadURL(uploadTask.snapshot.ref)
                                     .then((downloadURL) => {
                                     console.log('File available at', downloadURL);
-                                    props.handleClick(user, props.projectName, downloadURL, router)
                                     })
                                   setUploading(false);
                                   setConfirmupload(false);

@@ -3,8 +3,9 @@
 import React from "react";
 import { initializeApp, getApps } from "firebase/app";
 import { getAuth,GoogleAuthProvider, createUserWithEmailAndPassword,signInWithPopup,signInWithEmailAndPassword,sendPasswordResetEmail,signOut } from "firebase/auth";
-import {getFirestore,query,getDocs,collection,where,setDoc,doc} from 'firebase/firestore'
+import {getFirestore,query,getDocs,collection,where,setDoc,doc, getDoc} from 'firebase/firestore'
 import { useAuthState } from "react-firebase-hooks/auth";
+import { uploadBytesResumable } from "firebase/storage";
 const firebaseConfig = {
     apiKey: "AIzaSyASOEmk7hmcrgMJoilEekXVu0fCH7sTCpQ",
     authDomain: "convioo-395117.firebaseapp.com",
@@ -19,7 +20,63 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
+const listFolders = async ({user}) => {
+  if(user!=null)
+    {
+      const res = await getDoc(doc(db, 'scenarios', user.uid));
+      if (res.exists()) {
+        return res.data()['folders'];
+      }
+    }
+  
+}
 
+// const uploadVideo = ({
+//   storageRef,
+//   files,
+//   setUploading,
+//   setUploadProgress,
+//   setConfirmupload,
+//   setUploadIsOpen,
+//   handleClick,
+//   projectName,
+//   navigateTo,
+//   user,
+//   router,
+//   currentFolder
+// }) => {
+//   // setUploading(true);
+//   const uploadTask = uploadBytesResumable(storageRef.current, files);
+//   uploadTask.on('state_changed', 
+//     (snapshot) => {
+//       const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+//       setUploadProgress(progress);
+      
+//       switch (snapshot.state) {
+//         case 'paused':
+//           console.log('Upload is paused');
+//           break;
+//         case 'running':
+//           console.log('Upload is running');
+//           break;
+//       }
+//     }, 
+//     (error) => {
+//       // Handle unsuccessful uploads
+//     }, 
+//     () => {
+//       getDownloadURL(uploadTask.snapshot.ref)
+//         .then((downloadURL) => {
+//           console.log('File available at', downloadURL);
+//           handleClick(user,projectName, downloadURL, router, currentFolder )
+//         })
+//       setUploading(false);
+//       setConfirmupload(false);
+//       setUploadIsOpen(false);
+//       router.replace(navigateTo)
+//     }
+//   );
+// }
 
 
 const googleProvider = new GoogleAuthProvider();
@@ -85,10 +142,10 @@ const logInWithEmailAndPassword = async (email, password,setErrorMessage) => {
     signOut(auth);
   };
 
-  const SaveCards=async(cards, user, projectId, db, setDoc, doc)=>{
+  const SaveCards=async(cards, user,folder, projectId, db, setDoc, doc)=>{
     cards.map((card,index)=>{
       try{
-      setDoc(doc(db, `scenarios/${user.uid}/folderless/${projectId}/cards`, `${index}`), {
+      setDoc(doc(db, `scenarios/${user.uid}/${folder}/${projectId}/cards`, `${index}`), {
         title: card.title,
         overlay: card.overlay,
         videosrc: card.videosrc,
@@ -110,5 +167,8 @@ export {
     registerWithEmailAndPassword,
     sendPasswordReset,
     logout,
-    SaveCards
+    SaveCards,
+    // uploadVideo,
+    listFolders
+
   };

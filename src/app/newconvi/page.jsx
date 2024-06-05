@@ -4,23 +4,25 @@ import React, {useState, useEffect} from 'react'
 import Button from '../components/buttons/Button'
 import { arrow, close, dashIconBlue, down, folder, libraryicon, recordIconBlue, screenBlue, upload, uploadBlue } from '../assets'
 import Image from 'next/image';
-import firebase_app from '../config';
 import Modal from 'react-modal';
 import { getStorage,listAll,ref } from 'firebase/storage';
 import { AnimatePresence, motion } from 'framer-motion';
 import SourceButton from '../components/buttons/SourceButton';
 import Uploads from '../dashboard/library/uploads/page';
-import Secondmenu from '../components/secondmenu';
 import InputBox from '../components/InputBox';
 import UploadModal from '../components/UploadModal';
-import { setDoc,doc } from 'firebase/firestore';
-import { db } from '../firebase';
-
-function handleClick(user, projectName, url, router) {
-  setDoc(doc(db, `scenarios/${user.uid}/folderless/${projectName}`),{
+import { setDoc,doc, getDoc, updateDoc } from 'firebase/firestore';
+import { auth, db, listFolders } from '../firebase';
+import { arrayUnion } from 'firebase/firestore';
+import { useAuthState } from 'react-firebase-hooks/auth';
+function handleClick(user, projectName, url, router, folder) {
+  setDoc(doc(db, `scenarios/${user.uid}/${folder}/${projectName}`),{
     id:projectName
   })
-  setDoc(doc(db, `scenarios/${user.uid}/folderless/${projectName}/cards`, '0'), {
+  updateDoc(doc(db, `scenarios/${user.uid}`),{
+    folders: arrayUnion(folder)
+  });
+  setDoc(doc(db, `scenarios/${user.uid}/${folder}/${projectName}/cards`, '0'), {
     videosrc:url,
     prev:null,
     title:'',
@@ -34,6 +36,7 @@ function handleClick(user, projectName, url, router) {
 }
 
 const Page = () => {
+    const [currentFolder, setCurrentFolder] = useState('folderless');
   
     const storage =getStorage();
     const [chooseFolder, setChooseFolder] = useState(false);
@@ -45,25 +48,21 @@ const Page = () => {
     const [libraryState, setLibraryState] = useState(false);
     const [selectedVideo, setSelectedVideo] = useState([]);
     const [uploadIsOpen, setUploadIsOpen] = useState(false);
+    const [newFolder, setNewFolder] = useState(false);
+    const [user] = useAuthState(auth);
 
   useEffect(() => {
-    async function listFolders() {
-      try {
-        const { prefixes } = await listAll(listRef);
-
-        setFolders(prefixes.map(prefixItem => prefixItem.name));
-      } catch (error) {
-        console.error('Error listing folders:', error);
+    if(user!=null) listFolders({user:user}).then((res) => {
+      if (res) {
+        setFolders(res);
       }
-    }
-
-    listFolders();
-  },[]);
+    });
+  },[user]);
 
 
 
   return (
-    <div className='bg-[#f4f4f5]'> 
+    <div className='bg-[#f4f4f5] overflow-hidden'> 
     <AnimatePresence>
   {firstScreen && (
     <motion.div
@@ -72,7 +71,7 @@ const Page = () => {
       exit={{ opacity: 0, y: -30 }}
     >
 
-        {nameAndFolderSetting(setChooseFolder, selectedFolder, chooseFolder, setSelectedFolder, folders, setFirstScreen, setProjectName,projectName)}
+        {nameAndFolderSetting(setChooseFolder, selectedFolder, chooseFolder, setSelectedFolder, folders, setFirstScreen, setProjectName,projectName, setNewFolder, newFolder,currentFolder, setCurrentFolder,setFolders)}
         </motion.div>)}
         </AnimatePresence>
     <AnimatePresence>
@@ -83,7 +82,7 @@ const Page = () => {
       exit={{ opacity: 0, y: -30 }}
     >
         
-                {sourceChoosing(libraryState,setLibraryState , setSelectedVideo, selectedVideo, projectName, uploadIsOpen, setUploadIsOpen)}
+                {sourceChoosing(libraryState,setLibraryState , setSelectedVideo, selectedVideo, projectName, uploadIsOpen, setUploadIsOpen,currentFolder)}
     </motion.div>
         )
 
@@ -109,7 +108,7 @@ export default Page
 
 
 
-function nameAndFolderSetting(setChooseFolder, selectedFolder, chooseFolder, setSelectedFolder, folders, setFirstScreen, setProjectName, projectName) {
+function nameAndFolderSetting(setChooseFolder, selectedFolder, chooseFolder, setSelectedFolder, folders, setFirstScreen, setProjectName, projectName, setNewFolder, newFolder, currentFolder ,setCurrentFolder,setFolders) {
   return <div className="w-full h-screen pt-[236px] pb-[584px] bg-zinc-100 justify-center items-center inline-flex ">
     <div className="w-[416px] self-stretch flex-col justify-start items-start gap-8 inline-flex ">
       <div className="text-zinc-950 text-2xl font-medium">Ok, let&apos;s get started 🤟</div>
@@ -141,13 +140,21 @@ function nameAndFolderSetting(setChooseFolder, selectedFolder, chooseFolder, set
           `}>
           <div className="self-stretch mt-4 bg-white justify-between items-center gap-[37px] inline-flex h-fit">
             <div className="text-zinc-950 text-base font-semibold leading-snug">Choose Folder</div>
-            <Button title='New folder' RightIcon={folder} border={true} borderColor='border-neutral-400' textColor='text-black'/>
+            <Button title='New folder' RightIcon={folder} border={true} borderColor='border-neutral-400' textColor='text-black'
+            onClick={()=>{
+              setNewFolder(true);
+              setChooseFolder(false);
+            }}
+            
+            />
           </div>
           <div className="self-stretch h-[58px] flex-col justify-start items-start gap-1 flex">
             <div className="text-zinc-950 text-[10px] font-medium leading-[14px]">Folder name</div>
             <select className=" text-black self-stretch h-14 px-2 py-4 bg-white rounded-lg border border-neutral-200 justify-between items-center inline-flex"
               onChange={(event) => {
+                console.log(event.target.value);
                 setSelectedFolder(event.target.value);
+                setCurrentFolder(event.target.value);
               } }
             >
               <option value="Choose folder" className='text-black'>--Choose a folder</option>
@@ -170,12 +177,49 @@ function nameAndFolderSetting(setChooseFolder, selectedFolder, chooseFolder, set
             </div>
           </div>
         </Modal>
+        <Modal className='w-[449px] h-[190px] px-4 pb-4 bg-white rounded-2xl shadow flex-col justify-center items-center gap-4 inline-flex mt-8'
+          isOpen={newFolder}
+          overlayClassName={`
+            fixed inset-0 flex items-center justify-center
+            bg-black bg-opacity-70 z-50 
+          `}>
+          <div className="self-stretch mt-4 bg-white justify-between items-center gap-[37px] inline-flex h-fit">
+            <div className="text-zinc-950 text-base font-semibold leading-snug">Create new folder</div>
+          </div>
+          <div className="self-stretch h-[58px] flex-col justify-start items-start gap-1 flex">
+            <div className="text-zinc-950 text-[10px] font-medium leading-[14px]">Folder name</div>
+            <input type="text" className=" text-black self-stretch h-14 px-2 py-4 bg-white rounded-lg border border-neutral-200 justify-between items-center inline-flex"
+              onChange={(event) => {
+                setCurrentFolder(event.target.value);
+              } }/>
+          </div>
+          <div className="self-stretch justify-end items-center gap-2.5 inline-flex">
+            <div className="justify-end items-center gap-2 flex">
+              <Button title='Cancel' border={true} borderColor='border-neutral-400' textColor='text-black'
+                onClick={() => {
+                  setSelectedFolder('Choose folder');
+                  setNewFolder(false);
+                  setChooseFolder(true);
+                } } />
+              <Button backgroundColor='bg-black' title='Save' textColor='text-white' width='w-[80px]' border
+                onClick={() => {
+
+                  setSelectedFolder(currentFolder);
+                  console.log(currentFolder);
+                  setFolders([...folders,currentFolder]);
+                  console.log(folders);
+                  setNewFolder(false);
+                  setChooseFolder(true);
+                } } />
+            </div>
+          </div>
+        </Modal>
       </div>
     </div>
   </div>;
 }
 
-function sourceChoosing(libraryState,setLibraryState, setSelectedVideo, selectedVideo , projectName , uploadIsOpen, setUploadIsOpen){
+function sourceChoosing(libraryState,setLibraryState, setSelectedVideo, selectedVideo , projectName , uploadIsOpen, setUploadIsOpen, currentFolder){
   return (
     <div className="w-screen h-screen pt-[155px] pb-[514px] bg-zinc-100 justify-center items-center inline-flex">
     <div className=" self-stretch flex-col justify-start items-start gap-8 inline-flex h-full">
@@ -195,7 +239,9 @@ function sourceChoosing(libraryState,setLibraryState, setSelectedVideo, selected
                     </button>
                   </div>
               <div className='flex flex-row h-[90%]'>
-              <Uploads setSelectedVideo={setSelectedVideo} setModalState={setLibraryState} projectName={projectName.trim()} handleClick={handleClick}/>
+              <Uploads setSelectedVideo={setSelectedVideo} setModalState={setLibraryState} projectName={projectName.trim()} currentFolder={currentFolder} handleClick={handleClick} onClick={()=>{
+                
+              }}/>
               </div>
             </Modal>
             <SourceButton title='Upload Video' icon={uploadBlue} onClick={()=>setUploadIsOpen(true)}/>
@@ -207,6 +253,7 @@ function sourceChoosing(libraryState,setLibraryState, setSelectedVideo, selected
             setUploadIsOpen={setUploadIsOpen} 
             navigateTo={`/conviEditor/${projectName.trim()}`}
              handleClick={handleClick} projectName={projectName}
+             currentFolder={currentFolder}
              />
         </div>
     </div>

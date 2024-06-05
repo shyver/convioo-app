@@ -13,5 +13,6 @@ import ConviEditor from '@/app/components/ConviEditor';
 export default function Page({params , leaving}) {
 
     const projectId = decodeURIComponent(params.projectId);
-      return (<ConviEditor projectId={projectId} leaving={leaving} />)
+    const folder = decodeURIComponent(params.folder);
+      return (<ConviEditor projectId={projectId} folder={folder} leaving={leaving} />)
   }

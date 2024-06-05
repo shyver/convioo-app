@@ -2,70 +2,64 @@
 import React, { useEffect, useState } from "react";
 
 import { useRouter } from "next/navigation";
-import { auth, logInWithEmailAndPassword, signInWithGoogle } from "../firebase";
+import {logInWithEmailAndPassword, signInWithGoogle } from "../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import GoogleProviderButton from "../components/buttons/GoogleProviderButton";
 import InputBox from "../components/InputBox";
 import Button from "../components/buttons/Button";
 import { arrow, arrowWhite } from "../assets";
+import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 const Login = ()=>{
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [user, loading, error] = useAuthState(auth);
+  const [message, setMessage] = useState("");
   const router = useRouter();
-  useEffect(() => {
-    if (loading) { 
-      // maybe trigger a loading screen
-      return;
-    }
-    if (user) {
+  const auth= getAuth();
+    const sendResetEmail = async () => {
+        console.log(email);
+        try {
+            console.log('sending email');
+            await sendPasswordResetEmail(auth,email).then(() => {
+                setMessage("Password reset email sent")
+            });
+        }catch (error) {
+            setErrorMessage(error.message);
+        }
+    };
 
-      router.replace("/dashboard");
-    
-    }
-  }, [user, loading,router]);
+
+
   return (
     <div className="w-screen h-screen flex justify-center items-center bg-[#f4f4f4] flex-row">
       <div className="flex flex-col justify-evenly items-center">
         <div className="text-black text-2xl font-medium">
-        Sign in 🤟
+        Recover password
         </div>
         <div className="h-[32px]"/>
 
-          <GoogleProviderButton onClick={signInWithGoogle} />
-          <div className="h-[32px]"/>
-          <div className="flex flex-row w-full h-fit justify-center items-center">
-            <div className="h-px w-full bg-[#A6A6A6]"/>
-            <div className="p-2 text-[#A6A6A6]">OR</div>
-            <div className="h-px w-full bg-[#A6A6A6]"/>
-          </div>
-          <div className="h-[32px]"/>
 
-
-        <form className="input w-full" onSubmit={(e)=>{
+        <form className="input w-[432px]" onSubmit={(e)=>{
           e.preventDefault();
-          logInWithEmailAndPassword(email, password, setErrorMessage);
+          sendResetEmail();
         }} >
           <InputBox setvalue={setEmail} title='Email' placeholder='Email Address'/>
           <div className="h-[16px]"/>
-          
-          <InputBox type="password" setvalue={setPassword} title='Password' placeholder='Password'/>
           <div className="text-indigo-500 w-full flex justify-end">
-          <a href="/forgotpassword">Forgot Password ?</a>
           
             </div>
             <div className="h-[16px]"/>
         <Button backgroundColor='bg-black' width='w-full' RightIcon={arrowWhite}
-         title='Sign In' textColor='text-white'   type='submit'
+         title='Send reset email' textColor='text-white'  
+            type='submit' 
          />
-        
         </form>
         <div className="text-red-500 font-semibold">{errorMessage}</div>
+        <div className="text-green-500 font-semibold">{message}</div>
         <div className="h-[32px]"/>
 
         <div className="text-black">
-          Don&apos;t have an account? <a className="text-indigo-500" href="/register">Sign up</a>
+          Suddenly remembering your password ? <a className="text-indigo-500" href="/login">Sign in</a>
         </div>
       </div>
     </div>

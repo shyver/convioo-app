@@ -13,6 +13,7 @@ import { AnimatePresence,motion } from 'framer-motion';
 const Page = ({params}) => {
     const [user]= useAuthState(auth);
     const projectId = decodeURIComponent(params.projectId);
+    const folder = decodeURIComponent(params.folder);
     const [onMobile, setOnMobile] = useState(false);
     const [cardList, setCardList] = useState([]);
     const [cards, setCards] = useState([]);
@@ -23,10 +24,10 @@ const Page = ({params}) => {
 
 
         const getCardList= async ()=>{
-          const fetchedData= await getDocs(collection(db,`scenarios/${user.uid}/folderless/${projectId}/cards`));
+          const fetchedData= await getDocs(collection(db,`scenarios/${user.uid}/${folder}/${projectId}/cards`));
           setCardList(fetchedData.docs);
           const cardPromises = fetchedData.docs.map((document) => {
-            return getDoc(doc(db, `scenarios/${user.uid}/folderless/${projectId}/cards`, `${document.id}`));
+            return getDoc(doc(db, `scenarios/${user.uid}/${folder}/${projectId}/cards`, `${document.id}`));
           });
           const cardDataList = await Promise.all(cardPromises);
           const allCards = cardDataList.map(cardData => cardData.data());

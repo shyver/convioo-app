@@ -12,6 +12,7 @@ import { useRouter } from 'next/navigation'
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '@/app/firebase';
 import UploadModal from '@/app/components/UploadModal'
+import RecordModal from '@/app/components/RecordModal'
 
 
 
@@ -88,34 +89,13 @@ const [recordIsOpen, setRecordIsOpen] = useState(false);
 
         
     </div>
-    <UploadModal uploadIsOpen={uploadIsOpen} setUploadIsOpen={setuploadIsOpen} navigateTo='dashboard/library/uploads' />
+    <UploadModal uploadIsOpen={uploadIsOpen} setUploadIsOpen={setuploadIsOpen} navigateTo='/dashboard/library/uploads' />
     <div className="self-stretch p-6 bg-white rounded-xl justify-between items-center gap-[106px] inline-flex">
         <div className="text-zinc-950 text-base font-medium leading-snug w-[150px]">Record video</div>
         <OneIconButton src={recordIcon} title='Upload' onClick={()=>{
           setRecordIsOpen(true);
         }}/>
-        {/* <Modal
-        isOpen={recordIsOpen}
-        onRequestClose={()=>{setRecordIsOpen(false);}}
-        contentLabel="recordModal"
-        className='pt-[8%] px-[40%]'
-        ariaHideApp={false}
-        >
-          <div className="w-[739px] h-[516px] px-4 pb-4 bg-white rounded-2xl shadow flex-col justify-start items-start inline-flex">
-          <div className="self-stretch py-4 bg-white justify-between items-center gap-[37px] inline-flex">
-          <div className="text-zinc-950 text-base font-semibold leading-snug">Uploading File</div>
-        <button onClick={()=>{
-          setRecordIsOpen(false);
-        }}>
-        <Image src={close} alt='close'/>
-        </button>
-    </div>
-    <div className='self-stretch grow shrink basis-0 rounded-xl border border-zinc-500 flex-col justify-center items-center gap-2 flex bg-fit bg-center bg-cover overflow-hidden'>
-      <RecordView close={!recordIsOpen}/>
-
-    </div>
-     </div>       
-        </Modal> */}
+        <RecordModal  recordIsOpen={recordIsOpen} setRecordIsOpen={setRecordIsOpen} />
     </div>
 </div>
 </div>

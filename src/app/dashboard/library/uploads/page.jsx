@@ -57,7 +57,8 @@ const Uploads = (props) => {
       <VideoCard videoURL={url} videoTitle={itemList[index].name} onClick={()=>{
         {props.setSelectedVideo ?props.setSelectedVideo(url): null};
         {props.setModalState ? props.setModalState(false): null};
-        {props.projectName ? props.handleClick(user, props.projectName, url, router)
+        
+        {props.projectName ? props.handleClick(user, props.projectName, url, router, props.currentFolder)
         
     : null}
       }}/>
