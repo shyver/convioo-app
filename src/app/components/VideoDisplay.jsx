@@ -35,8 +35,8 @@ const VideoDisplay = (props) => {
         
 
             {props.src? 
-                    <div className='w-[340px] h-[172px] rounded-xl relative overflow-hidden '>
-            <video src={props.src} width={340} height={172} className='absolute' ></video>
+                    <div className='w-[340px] h-[172px] rounded-xl relative overflow-hidden bg-black '>
+            <video src={props.src} width={340} height={172} className='absolute h-[172px]' ></video>
             <div className='relative h-full flex flex-col justify-between px-4 py-2 bg-gradient-to-b from-black/60 to-25%'>
               <div className='text-white text-sm font-medium '>
                 {selectedVideoName}

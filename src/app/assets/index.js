@@ -36,6 +36,7 @@ import computerInactive from './computerInactive.svg';
 import mobile from './mobile.svg';
 import mobileInactive from './mobileInactive.svg';
 import expand from './expand.svg';
+import folderstack_blue from './folderstack_blue.svg';
 
 
 
@@ -77,6 +78,7 @@ export {
     computerInactive,
     mobile,
     mobileInactive,
-    expand
+    expand,
+    folderstack_blue
 
 }

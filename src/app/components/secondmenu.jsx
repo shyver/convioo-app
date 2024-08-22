@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 import { menustyle } from '../constants'
 import Source from './Source'
 import Image from 'next/image'
-import { folderstack_black } from '../assets'
+import { folderstack_black, folderstack_blue } from '../assets'
 import { usePathname } from 'next/navigation'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { getSubcollections, listFolders,db } from '../firebase'
@@ -66,15 +66,14 @@ const Secondmenu = (props) => {
     return folder.name =='folderless'? <div key={index}></div> :  <div key={index} className="self-stretch  flex-col justify-start items-center gap-1.5 flex">
     <div className={` ${selected == `/dashboard/scenario/uploads/${folder.name}` ? 'bg-[#f4f4f4] ' : ''} w-[217px] px-4 py-2.5  rounded justify-between items-center gap-2 inline-flex`} onClick={()=>{
         router.replace(`/dashboard/scenario/uploads/${folder.name}`)
-        console.log(selected);
-        setSelected(props.allDirectory);
+        setSelected(`/dashboard/scenario/uploads/${folder.name}`);
         
     }}>
         <div className="justify-start items-center gap-2 flex">
-            <Image src={folderstack_black} alt="folderstack"/>
+            <Image src={selected == `/dashboard/scenario/uploads/${folder.name}` ? folderstack_blue : folderstack_black} alt="folderstack"/>
             <div className={`text-zinc-950 text-sm  leading-[18px] ${selected == `/dashboard/scenario/uploads/${folder.name}` ? 'font-semibold' : 'font-medium'} `}>{folder.name}</div>
         </div>
-        <div className="text-right text-zinc-950 text-xs font-medium leading-[18px]">{folder.count}</div>
+        <div className={`text-right ${selected == `/dashboard/scenario/uploads/${folder.name}` ? 'text-[#3D4FE0]' : 'text-zinc-950' } text-xs font-medium leading-[18px]`}>{folder.count}</div>
     </div>
 
 </div>
@@ -95,10 +94,10 @@ const Secondmenu = (props) => {
                 
             }}>
                 <div className="justify-start items-center gap-2 flex">
-                    <Image src={folderstack_black} alt="folderstack"/>
+                    <Image src={selected == props.allDirectory ? folderstack_blue :folderstack_black} alt="folderstack"/>
                     <div className={`text-zinc-950 text-sm  leading-[18px] ${selected==props.allDirectory ? 'font-semibold' : 'font-medium'} `}>All</div>
                 </div>
-                <div className="text-right text-zinc-950 text-xs font-medium leading-[18px]">{filecount}</div>
+                <div className={`text-right  text-xs font-medium leading-[18px] ${selected == props.allDirectory ? 'text-[#3D4FE0]':'text-zinc-950'} `}>{filecount}</div>
             </div>
 
         </div>

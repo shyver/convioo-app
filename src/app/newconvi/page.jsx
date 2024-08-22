@@ -32,7 +32,7 @@ function handleClick(user, projectName, url, router, folder) {
   }).then(() => {
     console.log('upload done!');
   });
-  router.replace(`conviEditor/${projectName}`);
+  router.replace(`conviEditor/${folder}/${projectName}`);
 }
 
 const Page = () => {
@@ -251,7 +251,7 @@ function sourceChoosing(libraryState,setLibraryState, setSelectedVideo, selected
             <Button title='Add video later' RightIcon={arrow} width='w-[432px]' textColor='text-black'/>
             <UploadModal uploadIsOpen={uploadIsOpen} 
             setUploadIsOpen={setUploadIsOpen} 
-            navigateTo={`/conviEditor/${projectName.trim()}`}
+            navigateTo={`/conviEditor/${currentFolder}/${projectName.trim()}`}
              handleClick={handleClick} projectName={projectName}
              currentFolder={currentFolder}
              />

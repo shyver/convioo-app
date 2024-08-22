@@ -152,7 +152,7 @@ const ConviEditor = (props) => {
       const handleOptionsEdit=(optionId,title,destination,external,enabled)=>{
         const updatedOptions = cards[selectedCardId].options.map((option) => {
           if (option.id == optionId) {
-          return {...option,title : title? title : option.title,
+          return {...option,title : title!=null? title : option.title,
             destination:destination,
             external:external,enabled:enabled}
           
