@@ -9,6 +9,7 @@ import InputBox from "../components/InputBox";
 import Button from "../components/buttons/Button";
 import { arrow, arrowWhite } from "../assets";
 import Loading from "../loading";
+
 const Login = ()=>{
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
