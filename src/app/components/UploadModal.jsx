@@ -90,13 +90,13 @@ useEffect(() => {
         onRequestClose={closeModal}
         contentLabel="dropzone"
         className={`w-fit h-fit bg-transparent `}
-        overlayClassName="flex items-center justify-center fixed inset-0 bg-black/80"
+        overlayClassName="flex items-center justify-center fixed inset-0 bg-black/80 select-none"
         ariaHideApp={false}
         >
           <div className='w-[739px] h-[516px] px-4 pb-4 bg-white rounded-2xl shadow flex-col justify-start items-start inline-flex'>
             <div className='h-[50px] inline-flex items-center justify-between w-full'>
             <div className="text-zinc-950 text-base font-semibold leading-snug ">Upload File</div>
-            <Image src={close} alt={close} onClick={closeModal}/>
+            <Image src={close} alt={close} onClick={closeModal} className='cursor-pointer'/>
 
             </div>
           <MyDropzone/>

@@ -8,19 +8,20 @@ import GoogleProviderButton from "../components/buttons/GoogleProviderButton";
 import InputBox from "../components/InputBox";
 import Button from "../components/buttons/Button";
 import { arrow, arrowWhite } from "../assets";
+import Loading from "../loading";
 const Login = ()=>{
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [user, loading, error] = useAuthState(auth);
+  
   const router = useRouter();
   useEffect(() => {
     if (loading) { 
-      // maybe trigger a loading screen
+
       return;
     }
     if (user) {
-
       router.replace("/dashboard");
     
     }
@@ -32,7 +33,7 @@ const Login = ()=>{
         Sign in 🤟
         </div>
         <div className="h-[32px]"/>
-
+        
           <GoogleProviderButton onClick={signInWithGoogle} />
           <div className="h-[32px]"/>
           <div className="flex flex-row w-full h-fit justify-center items-center">
@@ -45,7 +46,7 @@ const Login = ()=>{
 
         <form className="input w-full" onSubmit={(e)=>{
           e.preventDefault();
-          logInWithEmailAndPassword(email, password, setErrorMessage);
+            logInWithEmailAndPassword(email, password, setErrorMessage);
         }} >
           <InputBox setvalue={setEmail} title='Email' placeholder='Email Address'/>
           <div className="h-[16px]"/>
@@ -68,8 +69,10 @@ const Login = ()=>{
           Don&apos;t have an account? <a className="text-indigo-500" href="/register">Sign up</a>
         </div>
       </div>
+
     </div>
-  );
+
+  ) ;
 
 }
 export default Login;

@@ -1,4 +1,5 @@
 import React,{useState, useRef , useEffect} from 'react'
+import Loading from '../loading';
 
 const VideoCard = (props) => {
     const [length, setLength] = useState("");

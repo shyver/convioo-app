@@ -1,11 +1,8 @@
 // Import the functions you need from the SDKs you need
 'use client'
-import React from "react";
 import { initializeApp, getApps } from "firebase/app";
 import { getAuth,GoogleAuthProvider, createUserWithEmailAndPassword,signInWithPopup,signInWithEmailAndPassword,sendPasswordResetEmail,signOut } from "firebase/auth";
 import {getFirestore,query,getDocs,collection,where,setDoc,doc, getDoc} from 'firebase/firestore'
-import { useAuthState } from "react-firebase-hooks/auth";
-import { uploadBytesResumable } from "firebase/storage";
 const firebaseConfig = {
     apiKey: "AIzaSyASOEmk7hmcrgMJoilEekXVu0fCH7sTCpQ",
     authDomain: "convioo-395117.firebaseapp.com",
@@ -30,55 +27,6 @@ const listFolders = async ({user}) => {
     }
   
 }
-
-// const uploadVideo = ({
-//   storageRef,
-//   files,
-//   setUploading,
-//   setUploadProgress,
-//   setConfirmupload,
-//   setUploadIsOpen,
-//   handleClick,
-//   projectName,
-//   navigateTo,
-//   user,
-//   router,
-//   currentFolder
-// }) => {
-//   // setUploading(true);
-//   const uploadTask = uploadBytesResumable(storageRef.current, files);
-//   uploadTask.on('state_changed', 
-//     (snapshot) => {
-//       const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-//       setUploadProgress(progress);
-      
-//       switch (snapshot.state) {
-//         case 'paused':
-//           console.log('Upload is paused');
-//           break;
-//         case 'running':
-//           console.log('Upload is running');
-//           break;
-//       }
-//     }, 
-//     (error) => {
-//       // Handle unsuccessful uploads
-//     }, 
-//     () => {
-//       getDownloadURL(uploadTask.snapshot.ref)
-//         .then((downloadURL) => {
-//           console.log('File available at', downloadURL);
-//           handleClick(user,projectName, downloadURL, router, currentFolder )
-//         })
-//       setUploading(false);
-//       setConfirmupload(false);
-//       setUploadIsOpen(false);
-//       router.replace(navigateTo)
-//     }
-//   );
-// }
-
-
 const googleProvider = new GoogleAuthProvider();
 const signInWithGoogle = async () => {
   try {
@@ -106,7 +54,7 @@ const logInWithEmailAndPassword = async (email, password,setErrorMessage) => {
       console.error(err);
 
       if(err.code==='auth/invalid-credential'){
-        setErrorMessage('User not found. Please register first');
+        setErrorMessage('Invalid email or password. Please try again.');
       }
     }
   };

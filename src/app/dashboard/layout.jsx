@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import Firstmenu from '../components/firstmenu'
 import Navbar from '../components/navbar'
 import Secondmenu from '../components/secondmenu'
@@ -8,6 +8,7 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import { auth } from '../firebase'
 import { db } from '../firebase'
 import { doc,getDoc } from 'firebase/firestore'
+import Loading from '../loading'
  
 export default function Layout({ children }) {
     const [bg, setBg] = useState(true) //first menu button states
@@ -40,6 +41,7 @@ export default function Layout({ children }) {
 
   return (
     <div className='h-screen max-h-screen overflow-hidden'>
+      <Suspense fallback={<Loading/>}>
       <Navbar fullname={userData.name} email={userData.email}
       onClick={()=>{
         router.push('/login');
@@ -58,6 +60,7 @@ export default function Layout({ children }) {
       
       <main className='w-screen '>{children}</main>
       </div>
+      </Suspense>
     </div>
   )
 }

@@ -32,12 +32,13 @@ const Secondmenu = (props) => {
                     listFolders({user:user}).then(async (folderNames)=>{
                         let totalCount = 0;
                         const folderData = await Promise.all(
-                            folderNames.map(async (folderName) => {
+                          
+                            folderNames? folderNames.map(async (folderName) => {
                               const countSnapshot = await getDocs(collection(db, `scenarios/${user.uid}/${folderName}`));
                               const count = countSnapshot.size;
                               totalCount+=count;
                               return { name: folderName, count };
-                            })
+                            }) : []
                           );
                     
                           setFolders(folderData);
@@ -63,8 +64,8 @@ const Secondmenu = (props) => {
     }, [user,selected])
     const _menuButton = (folder,index)=>{
 
-    return folder.name =='folderless'? <div key={index}></div> :  <div key={index} className="self-stretch  flex-col justify-start items-center gap-1.5 flex">
-    <div className={` ${selected == `/dashboard/scenario/uploads/${folder.name}` ? 'bg-[#f4f4f4] ' : ''} w-[217px] px-4 py-2.5  rounded justify-between items-center gap-2 inline-flex`} onClick={()=>{
+    return folder.name =='folderless'? <div key={index}></div> :  <div key={index} className="self-stretch  flex-col justify-start items-center gap-1.5 flex cursor-pointer ">
+    <div className={` ${selected == `/dashboard/scenario/uploads/${folder.name}` ? 'bg-[#f4f4f4] ' : ''} w-[217px] px-4 py-2.5  rounded justify-between items-center gap-2 inline-flex `} onClick={()=>{
         router.replace(`/dashboard/scenario/uploads/${folder.name}`)
         setSelected(`/dashboard/scenario/uploads/${folder.name}`);
         
@@ -87,7 +88,7 @@ const Secondmenu = (props) => {
     <div className="self-stretch flex-col justify-start items-start gap-2 flex">
         <div className="text-black text-base font-semibold leading-tight">Folders</div>
         <div className="self-stretch  flex-col justify-start items-center gap-1.5 flex">
-            <div className={` ${selected == props.allDirectory ? 'bg-[#f4f4f4] ' : ''} w-[217px] px-4 py-2.5  rounded justify-between items-center gap-2 inline-flex`} onClick={()=>{
+            <div className={` ${selected == props.allDirectory ? 'bg-[#f4f4f4] ' : ''} w-[217px] px-4 py-2.5  rounded justify-between items-center gap-2 inline-flex cursor-pointer`} onClick={()=>{
                 props.allClick();
                 console.log(selected);
                 setSelected(props.allDirectory);

@@ -1,11 +1,12 @@
 'use client'
-import React, {useEffect, useState} from 'react'
+import React, {Suspense, useEffect, useState} from 'react'
 import { getStorage, ref, listAll, getDownloadURL, getMetadata } from "firebase/storage";
 import VideoCard from '@/app/components/VideoCard';
 import firebase_app from '@/app/config';
 import { useRouter } from 'next/navigation';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '@/app/firebase';
+import Loading from '@/app/loading';
 
 
 const storage = getStorage();
@@ -50,6 +51,9 @@ const Uploads = (props) => {
 
 
   return (
+
+
+
     <div className='p-8 h-full overflow-y-scroll w-full scrollbar bg-[#f4f4f4]'>
       <div className="text-black text-xl font-semibold leading-tight">All Videos</div>
   <ul className='flex flex-wrap gap-2 '>

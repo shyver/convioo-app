@@ -56,7 +56,7 @@ const VideoDisplay = (props) => {
                 Choose File
               </div>
               <div>
-                <Image src={down} />
+                <Image src={down} alt="down" />
               </div>
            </button>
           

@@ -6,8 +6,9 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Page from './page';
 const Layout = ({params,children}) => {
-  const projectId= decodeURIComponent(params.projectId)
-  const folder= decodeURIComponent(params.folder)
+  const resolvedParams = React.use(params);
+  const projectId= decodeURIComponent(resolvedParams.projectId) ;
+  const folder= decodeURIComponent(resolvedParams.folder)
   const router = useRouter();
   const [leaving, setLeaving] = useState(false);
 
@@ -46,7 +47,7 @@ const Layout = ({params,children}) => {
     </div>
     <div className='flex flex-row gap-2 '>
       <Button LeftIcon={settings} border={true} borderColor='border-[#A6A6A6]' />
-      <Link href={`/preview/${folder}/${params.projectId}`}>
+      <Link href={`/preview/${folder}/${resolvedParams.projectId}`}>
       <Button LeftIcon={arrow} title='Preview' 
       border={true} borderColor='border-[#A6A6A6] '
       textColor='text-black'
@@ -59,7 +60,7 @@ const Layout = ({params,children}) => {
     </div>
     </nav>
     <main>
-      <Page params={params} leaving={leaving} />
+      <Page params={resolvedParams} leaving={leaving} />
     </main>
 
 </div>
