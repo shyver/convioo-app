@@ -13,7 +13,7 @@ import Loading from '../loading'
 export default function Layout({ children }) {
     const [bg, setBg] = useState(true) //first menu button states
     const router = useRouter();
-    const [user] = useAuthState(auth);
+    const [user,loading] = useAuthState(auth);
     const [userData, setUserData] = useState([]);
 
     useEffect(() => {
@@ -29,7 +29,9 @@ export default function Layout({ children }) {
           console.log("No such document!");
         }
       }
-
+      if (loading) {
+        return; // Wait for loading to finish
+      }
       if(user!=null)
       {
       fetchData();
@@ -37,7 +39,7 @@ export default function Layout({ children }) {
       else{
         router.push('/login');
       }
-    }, [user]);
+    }, [user,loading]);
 
   return (
     <div className='h-screen max-h-screen overflow-hidden'>
