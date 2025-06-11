@@ -8,9 +8,15 @@ import ConviEditor from '@/app/components/ConviEditor';
 //   const uploads = await getDoc(doc(db,`${user.uid}/videos/`));
 //   return uploads.docs.map((doc) => ({ params: { projectId: doc.id } }))
 // }
+interface PageProps {
+  params: {
+    projectId: string;
+    folder: string;
+  };
+  leaving?: boolean;
+}
 
-
-export default function Page({params , leaving}) {
+export default function Page({ params, leaving }: PageProps) {
 
     const projectId = decodeURIComponent(params.projectId);
     const folder = decodeURIComponent(params.folder);
