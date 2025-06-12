@@ -14,11 +14,9 @@ interface PageProps {
   searchParams?: { [key: string]: string | string[] | undefined };
 }
 
-const Page: NextPage<PageProps> = ({ params}) => {
+export default function Page({ params}: PageProps)  {
 
     const projectId = decodeURIComponent(params.projectId);
     const folder = decodeURIComponent(params.folder);
       return (<ConviEditor projectId={projectId} folder={folder}  />)
   }
-
-  export default Page;
