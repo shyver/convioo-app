@@ -3,8 +3,6 @@ import React, {useState,useEffect} from 'react';
 import { collection, getDocs} from "firebase/firestore"; 
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '@/app/firebase';
-import Button from '@/app/components/buttons/Button';
-import firebase_app from '@/app/config';
 import { db } from '@/app/firebase';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -25,8 +23,6 @@ const Page = () => {
         querySnapshot.forEach((doc) => {
             console.log(doc.data());
           firestoreProjects.push(doc.data());
-
-          
         });
         
         return firestoreProjects;
@@ -48,9 +44,7 @@ const Page = () => {
   console.log('projectData', projectsData);
   setProjects(projectsData);
 });
-    // fetchProjects();
     }
-
   }, [user]);
   return (
     <div className='bg-[#f4f4f4] w-full text-center text-black'>
