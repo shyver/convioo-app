@@ -6,7 +6,7 @@ import firebase_app from '@/app/config';
 import { useRouter } from 'next/navigation';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '@/app/firebase';
-import Loading from '@/app/loading';
+import Loading from './loading'
 
 
 const storage = getStorage();
@@ -52,7 +52,7 @@ const Uploads = (props) => {
 
   return (
 
-
+    <Suspense fallback={<Loading/>}>
 
     <div className='p-8 h-full overflow-y-scroll w-full scrollbar bg-[#f4f4f4]'>
       <div className="text-black text-xl font-semibold leading-tight">All Videos</div>
@@ -78,6 +78,7 @@ const Uploads = (props) => {
       
       
     </div>
+    </Suspense>
   )
 }
 

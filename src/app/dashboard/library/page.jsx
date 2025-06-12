@@ -5,7 +5,6 @@ import { upload, recordIcon, close, smallcross, check } from '@/app/assets'
 import OneIconButton from '@/app/components/buttons/OneIconButton'
 import Modal from 'react-modal'
 import Image from 'next/image'
-import VideoThumbnail from 'react-video-thumbnail';
 import firebase_app from '@/app/config';
 import { getStorage, ref, uploadBytesResumable, listAll } from "firebase/storage";
 import { useRouter } from 'next/navigation'

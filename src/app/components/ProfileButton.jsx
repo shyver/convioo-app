@@ -9,6 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../../components/ui/dropdown-menu"
+import { Skeleton } from '../../components/ui/skeleton'
 
 const ProfileButton = (props) => {
   
@@ -22,8 +23,11 @@ const ProfileButton = (props) => {
 <div className="text-zinc-950 text-xl font-black leading-normal">{props.fullname? props.fullname.charAt(0):''}</div>
 </div>
 <div className="flex-col justify-center items-start gap-0.5 inline-flex">
-<div className="h-[15px] text-zinc-950 text-sm font-semibold leading-[18px] text-ellipsis overflow-clip">{props.fullname}</div>
-<div className="w-[160px] h-[15px] text-neutral-500 text-xs font-medium leading-[14px] text-ellipsis overflow-clip">{props.email}</div>
+{props.fullname ? <div className="h-[15px] text-zinc-950 text-sm font-semibold leading-[18px] text-ellipsis overflow-clip">{props.fullname}</div> :<Skeleton className="h-4 w-[160px]" />}
+{props.email ? <div className="w-[160px] h-[15px] text-neutral-500 text-xs font-medium leading-[14px] text-ellipsis overflow-clip">{props.email}</div> :<Skeleton className="h-4 w-[130px]" />}
+
+
+
 </div>
 </div>
 </div>

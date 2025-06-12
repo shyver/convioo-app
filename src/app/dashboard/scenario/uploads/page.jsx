@@ -38,12 +38,12 @@ const Page = () => {
     if(user)
     {
       listFolders({user:user}).then(async (folderNames) => {
-  const projectsData = await folderNames.reduce(async (prevPromise, folderName) => {
+  const projectsData = folderNames? await folderNames.reduce(async (prevPromise, folderName) => {
     const acc = await prevPromise;
     const snapshot = await getDocs(collection(db, `scenarios/${user.uid}/${folderName}`));
     const projects = snapshot.docs.map(doc => ({ id: doc.data().id, folder: folderName }));
     return [...acc, ...projects];
-  }, Promise.resolve([]));
+  }, Promise.resolve([])) : [];
 
   console.log('projectData', projectsData);
   setProjects(projectsData);

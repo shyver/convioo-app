@@ -2,21 +2,19 @@ import React, {useState, useEffect, useRef} from 'react'
 import { useRouter } from 'next/navigation';
 import Modal from 'react-modal'
 import Image from 'next/image'
-import VideoThumbnail from 'react-video-thumbnail';
-import firebase_app from '@/app/config';
 import { getStorage, ref, uploadBytesResumable, listAll } from "firebase/storage";
 import { upload,  close, smallcross, check } from '@/app/assets'
 import { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth, uploadVideo } from '@/app/firebase';
+import { auth} from '@/app/firebase';
 import { getDownloadURL } from 'firebase/storage';
 
 const storage = getStorage();
 
 const UploadModal = (props) => {
-    const router = useRouter();
-    const [confirmupload, setConfirmupload] = useState(false);
+const router = useRouter();
+const [confirmupload, setConfirmupload] = useState(false);
 const [files,setFiles]= useState([]);
 const [thumbnail, setThumbnail] = useState('');
 const [uploadProgress, setUploadProgress] = useState(0);
@@ -24,6 +22,16 @@ const [uploading, setUploading] = useState(false);
 const [user] = useAuthState(auth);
 const storageRef = useRef([])
 const itemCount= useRef(0);
+
+
+useEffect(() => {
+    if (!files.preview) return;
+    extractThumbnail(files.preview).then((thumbnailUrl) => {
+        setThumbnail(thumbnailUrl);
+    }).catch((error) => {
+        console.error('Error extracting thumbnail:', error);
+    });
+}, [files]);
 
 useEffect(() => {
     if(user){
@@ -40,6 +48,51 @@ useEffect(() => {
   
   }, [user])
 
+function extractThumbnail(videoUrl, captureTime = 1) {
+    return new Promise((resolve, reject) => {
+        const video = document.createElement('video');
+        video.crossOrigin = 'anonymous';
+        video.src = videoUrl;
+        video.muted = true;
+        video.playsInLine = true;
+
+        // Wait for video metadata to load
+        video.addEventListener('loadedmetadata', () => {
+            // Set the current time and wait for it to be ready
+            video.currentTime = Math.min(captureTime, video.duration);
+        });
+
+        // Handle the seeked event which fires when currentTime is set
+        video.addEventListener('seeked', () => {
+            try {
+                const canvas = document.createElement('canvas');
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                const ctx = canvas.getContext('2d');
+                
+                // Actually draw the video frame
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                
+                const thumbnailDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+                
+                // Clean up
+                video.remove();
+                resolve(thumbnailDataUrl);
+            } catch (err) {
+                reject(`Failed to capture thumbnail: ${err.message}`);
+            }
+        });
+
+        video.addEventListener('error', (e) => {
+            reject(`Failed to load video: ${video.error.message}`);
+        });
+
+        // Load the video
+        video.load();
+    });
+}
+
+
     function MyDropzone() {
 
         const onDrop = useCallback(acceptedFiles => {
@@ -47,13 +100,17 @@ useEffect(() => {
             setFiles(...acceptedFiles.map(file =>Object.assign(file, {preview: URL.createObjectURL(file)}) )
             
             );
-    
-            if(files)
+
+            if(files!=[])
             {
+              console.log('files = ', files);
+              console.log('preview = ', files.preview);
+              
             storageRef.current=ref(storage, `${user.uid}/videos/Convioo #${itemCount.current}`);
             props.setUploadIsOpen(false);
             setConfirmupload(true);
             console.log('itemcount = '+itemCount.current);
+
             }
         }
         // Do something with the files
@@ -99,6 +156,7 @@ useEffect(() => {
             <Image src={close} alt={close} onClick={closeModal} className='cursor-pointer'/>
 
             </div>
+            
           <MyDropzone/>
           </div>
         </Modal>
@@ -116,6 +174,9 @@ useEffect(() => {
         <button onClick={()=>{
           setConfirmupload(false);
           props.setUploadIsOpen(true);
+          setFiles([]);
+          setThumbnail('');
+
         }}>
         <Image src={close} alt='close'/>
         </button>
@@ -125,7 +186,7 @@ useEffect(() => {
               `url(${thumbnail})`,
           }}>
         <div className="self-stretch grow shrink basis-0 justify-center items-center inline-flex">
-        <div className='hidden'>
+        {/* <div className='hidden'>
         { files.length!=0 ? <VideoThumbnail
     videoUrl={files.preview}
     thumbnailHandler={(thumbnail) => {
@@ -133,7 +194,8 @@ useEffect(() => {
     }}
     width={0}
     /> : null}
-    </div> 
+    </div>  */}
+    
             <div className="flex-col justify-start items-start inline-flex">
                 <div className="w-[916.53px] h-[452.50px] pl-[318.76px] pr-[317.76px] pt-[167.25px] pb-[205.25px] justify-center items-center inline-flex">
                     <div className="self-stretch p-3 bg-white rounded-xl justify-center items-center gap-4 inline-flex">
