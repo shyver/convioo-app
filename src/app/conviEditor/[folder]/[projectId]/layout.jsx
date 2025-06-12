@@ -60,7 +60,7 @@ const Layout = ({params,children}) => {
     </div>
     </nav>
     <main>
-      <Page params={resolvedParams} leaving={leaving} />
+      {<Page params={resolvedParams}  />}
     </main>
 
 </div>
